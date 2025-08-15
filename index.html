@@ -196,24 +196,50 @@
   </footer>
 
   <!-- JSON-LD Product Schema -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "Product",
-    "name": "AutomateX Turbo Package of AI Tools and Prompts",
-    "description": "Premium eBook + 50+ prompts + tools guide + checklists + templates + bonus.",
-    "brand": {"@type": "Brand", "name": "AutomateX"},
-    "offers": {
-      "@type": "Offer",
-      "price": "19.00",
-      "priceCurrency": "USD",
-      "url": "https://automatexai.gumroad.com/l/automatex-turbo",
-      "availability": "https://schema.org/InStock"
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Product",
+  "name": "AutomateX Turbo Package of AI Tools and Prompts",
+  "description": "Premium eBook + 50+ prompts + tools guide + checklists + templates + bonus.",
+  "image": [
+    "https://contactautomatex-byte.github.io/automatex-turbo/assets/AutomateX.png"
+  ],
+  "brand": { "@type": "Brand", "name": "AutomateX" },
+  "offers": {
+    "@type": "Offer",
+    "url": "https://automatexai.gumroad.com/l/automatex-turbo",
+    "price": "19.00",
+    "priceCurrency": "USD",
+    "availability": "https://schema.org/InStock",
+    "priceValidUntil": "2027-12-31",
+    "hasMerchantReturnPolicy": {
+      "@type": "MerchantReturnPolicy",
+      "applicableCountry": "US",
+      "returnPolicyCategory": "https://schema.org/MerchantReturnFiniteReturnWindow",
+      "merchantReturnDays": 7,
+      "returnMethod": "https://schema.org/ReturnByMail",
+      "returnFees": "https://schema.org/FreeReturn"
+    },
+    "shippingDetails": {
+      "@type": "OfferShippingDetails",
+      "shippingRate": { "@type": "MonetaryAmount", "currency": "USD", "value": "0.00" },
+      "shippingDestination": {
+        "@type": "DefinedRegion",
+        "addressCountry": ["US","BR","GB","CA","AU","DE","FR","ES","PT"]
+      },
+      "deliveryTime": {
+        "@type": "ShippingDeliveryTime",
+        "handlingTime": { "@type": "QuantitativeValue", "minValue": 0, "maxValue": 0, "unitCode": "HUR" },
+        "transitTime": { "@type": "QuantitativeValue", "minValue": 0, "maxValue": 0, "unitCode": "HUR" }
+      }
     }
   }
-  </script>
+}
+</script>
 </body>
 </html>
+
 
 
 
