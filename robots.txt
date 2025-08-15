@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://contactautomatex-byte.github.io/automatex-turbo/sitemap.xml
