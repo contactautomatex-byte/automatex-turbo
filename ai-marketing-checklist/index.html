@@ -1,92 +1,234 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta charset="utf-8" />
+  <title>AI Marketing Checklist – AutomateX Turbo | Templates, Prompts & Automation</title>
+  <meta name="description" content="Free AI Marketing Checklist powered by AutomateX Turbo. Plan campaigns, create content, automate funnels, email, and sales tasks using 50+ ready prompts and templates." />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="canonical" href="https://contactautomatex-byte.github.io/automatex-turbo/ai-marketing-checklist/" />
+  <meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1" />
 
-  <!-- TITLE -->
-  <title>Ultimate AI Marketing Automation Checklist – AutomateX Turbo</title>
+  <!-- Open Graph -->
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="AI Marketing Checklist – AutomateX Turbo" />
+  <meta property="og:description" content="Plan, produce and automate your marketing with the AutomateX Turbo AI Marketing Checklist + 50+ proven prompts." />
+  <meta property="og:url" content="https://contactautomatex-byte.github.io/automatex-turbo/ai-marketing-checklist/" />
+  <meta property="og:image" content="https://contactautomatex-byte.github.io/automatex-turbo/assets/automatex-social-card.png" />
 
-  <!-- DESCRIPTION -->
-  <meta name="description" content="A concise checklist to plan, execute and measure campaigns with AI."/>
-
-  <link rel="canonical" href="https://contactautomatex-byte.github.io/automatex-turbo/ai-marketing-checklist/"/>
-  <meta name="robots" content="index,follow"/>
-
-  <!-- Social preview -->
-  <meta property="og:type" content="article"/>
-  <meta property="og:title" content="Ultimate AI Marketing Automation Checklist – AutomateX Turbo"/>
-  <meta property="og:description" content="A concise checklist to plan, execute and measure campaigns with AI."/>
-  <meta property="og:url" content="https://contactautomatex-byte.github.io/automatex-turbo/ai-marketing-checklist/"/>
-  <meta property="og:image" content="https://contactautomatex-byte.github.io/automatex-turbo/assets/AutomateX.png"/>
-  <meta property="og:image:width" content="1200"/>
-  <meta property="og:image:height" content="630"/>
-  <meta name="twitter:card" content="summary_large_image"/>
-  <meta name="twitter:title" content="Ultimate AI Marketing Automation Checklist – AutomateX Turbo"/>
-  <meta name="twitter:description" content="A concise checklist to plan, execute and measure campaigns with AI."/>
-  <meta name="twitter:image" content="https://contactautomatex-byte.github.io/automatex-turbo/assets/AutomateX.png"/>
-
-  <link rel="icon" type="image/png" href="/automatex-turbo/assets/favicon.png"/>
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="AI Marketing Checklist – AutomateX Turbo" />
+  <meta name="twitter:description" content="Step-by-step checklist + ready AI prompts for campaigns, content, email and sales automation." />
+  <meta name="twitter:image" content="https://contactautomatex-byte.github.io/automatex-turbo/assets/automatex-social-card.png" />
 
   <style>
-    :root{--bg:#0a0d1a;--ink:#eef2ff;--muted:#a9b3d8;--card:#11162a;--line:#232c52;--acc:#7c5cff;--acc2:#56e0ff}
-    *{box-sizing:border-box} body{margin:0;font-family:Inter,ui-sans-serif,system-ui;background:#0a0d1a;color:var(--ink);line-height:1.65}
-    a{color:inherit;text-decoration:none}
-    .wrap{max-width:960px;margin:0 auto;padding:28px}
-    .crumbs{font-size:13px;color:var(--muted);margin:6px 0 18px}
-    h1{font-size:34px;line-height:1.15;margin:6px 0 12px}
-    p{color:#d8ddff}
-    .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;margin:14px 0}
-    .btn{display:inline-block;margin-top:10px;background:linear-gradient(135deg,var(--acc),var(--acc2));color:#0b1024;
-         padding:12px 16px;border-radius:12px;font-weight:800;box-shadow:0 10px 28px rgba(124,92,255,.35)}
-    ul{margin:10px 0 0 18px}
-    footer{margin-top:24px;color:var(--muted);font-size:12px;border-top:1px solid var(--line);padding-top:16px}
+    :root{--bg:#0b0d12;--card:#111520;--text:#e9ecf3;--muted:#a7b0c0;--brand:#7c5cff;--acc:#00e0b8;}
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--bg);color:var(--text);font:16px/1.6 system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,"Helvetica Neue",Arial,"Noto Sans",sans-serif}
+    a{color:var(--acc);text-decoration:none}
+    a:hover{text-decoration:underline}
+    .wrap{max-width:980px;margin:auto;padding:40px 20px}
+    header{display:flex;gap:16px;align-items:center;margin-bottom:24px}
+    .badge{background:linear-gradient(135deg,var(--brand),#4cd4ff);color:#fff;border-radius:999px;padding:6px 12px;font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.08em}
+    h1{font-size:clamp(28px,4vw,40px);line-height:1.15;margin:.2em 0 .4em}
+    h2{margin-top:1.8em;font-size:clamp(20px,3vw,26px)}
+    .card{background:var(--card);border:1px solid #1c2233;border-radius:16px;padding:22px;margin:16px 0}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
+    ul.check{list-style:none;padding-left:0}
+    ul.check li{margin:.5em 0;padding-left:28px;position:relative}
+    ul.check li:before{content:"✅";position:absolute;left:0}
+    .cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:16px}
+    .btn{display:inline-block;padding:12px 18px;border-radius:12px;font-weight:700}
+    .btn.primary{background:var(--brand);color:#fff}
+    .btn.ghost{border:1px solid #2a3146;color:#dfe5f7}
+    nav.breadcrumbs{font-size:13px;color:var(--muted);margin-bottom:10px}
+    nav.breadcrumbs a{color:var(--muted)}
+    .muted{color:var(--muted)}
+    footer{margin:40px 0 10px;color:#9aa6bd;font-size:13px}
+    .toc a{display:block;padding:8px 0;color:#dfe5f7}
+    .toc a small{color:#9aa6bd}
+    .pill{display:inline-block;border:1px solid #2a3146;border-radius:999px;padding:6px 10px;color:#cbd6ee;margin:4px 6px 0 0;font-size:13px}
+    .note{font-size:14px;color:#aab4c8}
   </style>
 
-  <!-- Breadcrumb + WebSite schema -->
+  <!-- Schema.org JSON-LD -->
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"Article",
+    "headline":"AI Marketing Checklist – AutomateX Turbo",
+    "description":"A practical AI marketing checklist with steps and ready prompts from AutomateX Turbo to plan, create and automate campaigns.",
+    "author":{"@type":"Organization","name":"AutomateX Turbo"},
+    "publisher":{"@type":"Organization","name":"AutomateX Turbo","logo":{"@type":"ImageObject","url":"https://contactautomatex-byte.github.io/automatex-turbo/assets/automatex-logo.png"}},
+    "mainEntityOfPage":"https://contactautomatex-byte.github.io/automatex-turbo/ai-marketing-checklist/",
+    "image":"https://contactautomatex-byte.github.io/automatex-turbo/assets/automatex-social-card.png",
+    "datePublished":"2025-08-15",
+    "dateModified":"2025-09-09"
+  }
+  </script>
   <script type="application/ld+json">
   {
     "@context":"https://schema.org",
     "@type":"BreadcrumbList",
     "itemListElement":[
       {"@type":"ListItem","position":1,"name":"Home","item":"https://contactautomatex-byte.github.io/automatex-turbo/"},
-      {"@type":"ListItem","position":2,"name":"Ultimate AI Marketing Automation Checklist","item":"https://contactautomatex-byte.github.io/automatex-turbo/ai-marketing-checklist/"}
+      {"@type":"ListItem","position":2,"name":"Resources","item":"https://contactautomatex-byte.github.io/automatex-turbo/"},
+      {"@type":"ListItem","position":3,"name":"AI Marketing Checklist","item":"https://contactautomatex-byte.github.io/automatex-turbo/ai-marketing-checklist/"}
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"FAQPage",
+    "mainEntity":[
+      {"@type":"Question","name":"What is AutomateX Turbo?","acceptedAnswer":{"@type":"Answer","text":"AutomateX Turbo is a package of AI tools & 50+ ready prompts that help you plan, create and automate marketing and sales tasks faster."}},
+      {"@type":"Question","name":"Is the checklist free?","acceptedAnswer":{"@type":"Answer","text":"Yes, the checklist on this page is free to use. You can upgrade to AutomateX Turbo for the complete prompt pack and templates."}},
+      {"@type":"Question","name":"Can I use it for small businesses?","acceptedAnswer":{"@type":"Answer","text":"Absolutely. The steps include quick wins for small teams: content outlines, email sequences, funnel prompts and sales follow-up automation."}}
     ]
   }
   </script>
 </head>
 <body>
   <div class="wrap">
-    <div class="crumbs"><a href="/automatex-turbo/">AutomateX</a> · Ultimate AI Marketing Automation Checklist</div>
+    <nav class="breadcrumbs">
+      <a href="https://contactautomatex-byte.github.io/automatex-turbo/">Home</a> ›
+      <span>AI Marketing Checklist</span>
+    </nav>
 
-    <!-- H1 -->
-    <h1>Ultimate AI Marketing Automation Checklist</h1>
+    <header>
+      <span class="badge">AutomateX Turbo</span>
+      <div class="muted">AI tools & prompts for growth</div>
+    </header>
 
-    <p>Follow this checklist to reduce guesswork and keep quality high at speed.</p>
+    <h1>AI Marketing Checklist – AutomateX Turbo</h1>
+    <p class="muted">A practical, step-by-step list to plan campaigns, create content, automate email & funnels, and measure results — with links to matching <strong>AI prompts from AutomateX Turbo</strong>.</p>
 
-    <div class="card">
-      <h3>What you’ll get</h3>
-      <ul>
-        <li>Premium eBook: strategy + SOPs + timelines</li>
-        <li>50+ copy-and-sell AI prompts</li>
-        <li>Top tools stack & quickstart checklists</li>
-      </ul>
-      <a class="btn" href="https://automatexai.gumroad.com/l/automatex-turbo?utm_source=githubpages&utm_medium=seo-page&utm_campaign=ai-marketing-checklist" target="_blank" rel="noopener">
-        Get AutomateX Turbo – $19
-      </a>
+    <div class="card grid">
+      <div>
+        <h2>Table of Contents</h2>
+        <div class="toc">
+          <a href="#plan">1) Plan & Research <small>(ICP, offer, keywords)</small></a>
+          <a href="#produce">2) Produce Content <small>(blogs, socials, visuals)</small></a>
+          <a href="#funnels">3) Build Funnels <small>(lead magnets, pages, CTAs)</small></a>
+          <a href="#email">4) Email & Nurture <small>(sequences, follow-ups)</small></a>
+          <a href="#sales">5) Sales Enablement <small>(objection handling, demos)</small></a>
+          <a href="#measure">6) Measure & Optimize <small>(KPIs, tests)</small></a>
+          <a href="#faq">FAQ</a>
+        </div>
+      </div>
+      <div>
+        <h2>Get the Full Toolkit</h2>
+        <p>Unlock 50+ ready prompts, templates and workflows used in this checklist.</p>
+        <div class="cta">
+          <a class="btn primary" href="https://automatexai.gumroad.com/l/automatex-turbo" rel="noopener" target="_blank">Get AutomateX Turbo →</a>
+          <a class="btn ghost" href="https://contactautomatex-byte.github.io/automatex-turbo/"">See Overview</a>
+        </div>
+        <div class="note">One-time payment. Instant access on Gumroad.</div>
+      </div>
     </div>
 
-    <div class="card">
-      <h3>Quick tips</h3>
-      <ul>
-        <li>Start with Chapter 3 for the core AI tools</li>
-        <li>Use Sales Prompts to ship high-converting assets fast</li>
-        <li>Leverage the bonus cheat sheet to ideate in minutes</li>
+    <!-- 1) PLAN -->
+    <section id="plan" class="card">
+      <h2>1) Plan & Research</h2>
+      <ul class="check">
+        <li>Define ICP and Jobs-to-Be-Done. <a href="https://contactautomatex-byte.github.io/automatex-turbo/ai-productivity-prompts/">ICP discovery prompt</a></li>
+        <li>Clarify offer & value props (pain → promise → proof).</li>
+        <li>Keyword set: primary + supporting + questions.</li>
+        <li>Channel map: blog, social, email, partners, communities.</li>
+        <li>Set KPIs (leads, MQLs, CTR, CPL, demo rate, revenue).</li>
       </ul>
+      <div class="pill">keyword research</div><div class="pill">ICP</div><div class="pill">positioning</div>
+    </section>
+
+    <!-- 2) PRODUCE -->
+    <section id="produce" class="card">
+      <h2>2) Produce Content</h2>
+      <ul class="check">
+        <li>Create pillar + clusters. Use <a href="https://contactautomatex-byte.github.io/automatex-turbo/automate-content-ai/">Automate Content AI</a> to generate briefs & outlines.</li>
+        <li>Write with clear H1/H2, FAQs and internal links.</li>
+        <li>Generate social snippets & carousels from each post.</li>
+        <li>Design hero & OG images (brand + benefit).</li>
+      </ul>
+      <p class="muted">Helpful resources: 
+        <a href="https://contactautomatex-byte.github.io/automatex-turbo/ai-marketing-templates/">Marketing Templates</a>,
+        <a href="https://contactautomatex-byte.github.io/automatex-turbo/ai-marketing-prompts/">Marketing Prompts</a>,
+        <a href="https://contactautomatex-byte.github.io/automatex-turbo/ai-prompt-cheat-sheet/">Prompt Cheat-Sheet</a>.
+      </p>
+    </section>
+
+    <!-- 3) FUNNELS -->
+    <section id="funnels" class="card">
+      <h2>3) Build Funnels</h2>
+      <ul class="check">
+        <li>Lead magnet: checklist, mini-guide, calculators.</li>
+        <li>Landing page: promise, proof, preview, CTA.</li>
+        <li>UTM conventions + analytics events.</li>
+        <li>Thank-you page with next action (demo, community).</li>
+      </ul>
+      <p class="muted">See: <a href="https://contactautomatex-byte.github.io/automatex-turbo/ai-funnel-automation/">AI Funnel Automation</a>.</p>
+    </section>
+
+    <!-- 4) EMAIL -->
+    <section id="email" class="card">
+      <h2>4) Email & Nurture</h2>
+      <ul class="check">
+        <li>Welcome + 3-email value sequence with case/guide.</li>
+        <li>Behavioural triggers: view pricing, download, reply.</li>
+        <li>Plain-text sales handoff for hot leads.</li>
+        <li>Weekly content recap with 1 CTA.</li>
+      </ul>
+      <p class="muted">Ready sequences: <a href="https://contactautomatex-byte.github.io/automatex-turbo/ai-email-prompts/">AI Email Prompts</a>.</p>
+    </section>
+
+    <!-- 5) SALES -->
+    <section id="sales" class="card">
+      <h2>5) Sales Enablement</h2>
+      <ul class="check">
+        <li>Objection handling library (price, timing, features).</li>
+        <li>Discovery → demo prompt set for reps.</li>
+        <li>Follow-up rhythm (1-2-5-10) with value nuggets.</li>
+      </ul>
+      <p class="muted">Tools: <a href="https://contactautomatex-byte.github.io/automatex-turbo/ai-sales-tools/">AI Sales Tools</a>.</p>
+    </section>
+
+    <!-- 6) MEASURE -->
+    <section id="measure" class="card">
+      <h2>6) Measure & Optimize</h2>
+      <ul class="check">
+        <li>Dashboard: traffic → leads → MQL → revenue.</li>
+        <li>A/B tests on headlines, hero, offers and emails.</li>
+        <li>Content refresh every 60–90 days (FAQs + links).</li>
+      </ul>
+      <div class="cta">
+        <a class="btn primary" href="https://automatexai.gumroad.com/l/automatex-turbo" target="_blank" rel="noopener">Unlock All 50+ Prompts</a>
+        <a class="btn ghost" href="https://contactautomatex-byte.github.io/automatex-turbo/ai-digital-marketing-prompts/">See Digital Marketing Prompts</a>
+      </div>
+    </section>
+
+    <!-- Related Links -->
+    <div class="card">
+      <h2>Related AutomateX Turbo Resources</h2>
+      <div class="grid">
+        <a class="btn ghost" href="https://contactautomatex-byte.github.io/automatex-turbo/ai-content-prompts/">AI Content Prompts</a>
+        <a class="btn ghost" href="https://contactautomatex-byte.github.io/automatex-turbo/ai-tool-stack-entrepreneurs/">AI Tool Stack for Entrepreneurs</a>
+        <a class="btn ghost" href="https://contactautomatex-byte.github.io/automatex-turbo/automate-business-ai/">Automate Business with AI</a>
+        <a class="btn ghost" href="https://contactautomatex-byte.github.io/automatex-turbo/ai-productivity-prompts/">AI Productivity Prompts</a>
+      </div>
     </div>
 
-    <footer>© 2025 AutomateX • One-time payment • Instant access</footer>
+    <!-- FAQ -->
+    <section id="faq" class="card">
+      <h2>FAQ</h2>
+      <p><strong>Does this checklist work for small teams?</strong><br/>Yes — all steps are designed to ship fast with limited resources.</p>
+      <p><strong>Do I need AutomateX Turbo to use it?</strong><br/>No. The checklist is free. AutomateX Turbo gives you the prompts to execute each step 5–10× faster.</p>
+    </section>
+
+    <footer>
+      © <span id="y"></span> AutomateX Turbo • <a href="https://automatexai.gumroad.com/l/automatex-turbo" target="_blank" rel="noopener">Buy on Gumroad</a>
+    </footer>
   </div>
+
+  <script>document.getElementById('y').textContent=new Date().getFullYear()</script>
 </body>
 </html>
-
