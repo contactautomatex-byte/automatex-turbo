@@ -1,92 +1,198 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta charset="utf-8" />
+  <title>Automate Content AI – AutomateX Turbo | Prompts & Templates for Blogs, Socials & Copy</title>
+  <meta name="description" content="Automate Content AI powered by AutomateX Turbo. Use ready AI prompts & templates to generate blog posts, social media content, visuals and ad copy faster." />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="canonical" href="https://contactautomatex-byte.github.io/automatex-turbo/automate-content-ai/" />
+  <meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1" />
 
-  <!-- TITLE -->
-  <title>Automate Content Creation with AI – AutomateX Turbo</title>
+  <!-- Open Graph -->
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="Automate Content AI – AutomateX Turbo" />
+  <meta property="og:description" content="Step-by-step guide + 50+ AI prompts for blogs, social posts, visuals and ad copy." />
+  <meta property="og:url" content="https://contactautomatex-byte.github.io/automatex-turbo/automate-content-ai/" />
+  <meta property="og:image" content="https://contactautomatex-byte.github.io/automatex-turbo/assets/automatex-social-card.png" />
 
-  <!-- DESCRIPTION -->
-  <meta name="description" content="A repeatable system to ideate, draft, edit and ship content daily."/>
-
-  <link rel="canonical" href="https://contactautomatex-byte.github.io/automatex-turbo/automate-content-ai/"/>
-  <meta name="robots" content="index,follow"/>
-
-  <!-- Social preview -->
-  <meta property="og:type" content="article"/>
-  <meta property="og:title" content="Automate Content Creation with AI – AutomateX Turbo"/>
-  <meta property="og:description" content="A repeatable system to ideate, draft, edit and ship content daily."/>
-  <meta property="og:url" content="https://contactautomatex-byte.github.io/automatex-turbo/automate-content-ai/"/>
-  <meta property="og:image" content="https://contactautomatex-byte.github.io/automatex-turbo/assets/AutomateX.png"/>
-  <meta property="og:image:width" content="1200"/>
-  <meta property="og:image:height" content="630"/>
-  <meta name="twitter:card" content="summary_large_image"/>
-  <meta name="twitter:title" content="Automate Content Creation with AI – AutomateX Turbo"/>
-  <meta name="twitter:description" content="A repeatable system to ideate, draft, edit and ship content daily."/>
-  <meta name="twitter:image" content="https://contactautomatex-byte.github.io/automatex-turbo/assets/AutomateX.png"/>
-
-  <link rel="icon" type="image/png" href="/automatex-turbo/assets/favicon.png"/>
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Automate Content AI – AutomateX Turbo" />
+  <meta name="twitter:description" content="AI prompts to automate blogs, social media, visuals and ads. Faster, cheaper, better." />
+  <meta name="twitter:image" content="https://contactautomatex-byte.github.io/automatex-turbo/assets/automatex-social-card.png" />
 
   <style>
-    :root{--bg:#0a0d1a;--ink:#eef2ff;--muted:#a9b3d8;--card:#11162a;--line:#232c52;--acc:#7c5cff;--acc2:#56e0ff}
-    *{box-sizing:border-box} body{margin:0;font-family:Inter,ui-sans-serif,system-ui;background:#0a0d1a;color:var(--ink);line-height:1.65}
-    a{color:inherit;text-decoration:none}
-    .wrap{max-width:960px;margin:0 auto;padding:28px}
-    .crumbs{font-size:13px;color:var(--muted);margin:6px 0 18px}
-    h1{font-size:34px;line-height:1.15;margin:6px 0 12px}
-    p{color:#d8ddff}
-    .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;margin:14px 0}
-    .btn{display:inline-block;margin-top:10px;background:linear-gradient(135deg,var(--acc),var(--acc2));color:#0b1024;
-         padding:12px 16px;border-radius:12px;font-weight:800;box-shadow:0 10px 28px rgba(124,92,255,.35)}
-    ul{margin:10px 0 0 18px}
-    footer{margin-top:24px;color:var(--muted);font-size:12px;border-top:1px solid var(--line);padding-top:16px}
+    :root{--bg:#0b0d12;--card:#111520;--text:#e9ecf3;--muted:#a7b0c0;--brand:#7c5cff;--acc:#00e0b8;}
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--bg);color:var(--text);font:16px/1.6 system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,"Helvetica Neue",Arial,"Noto Sans",sans-serif}
+    a{color:var(--acc);text-decoration:none}
+    a:hover{text-decoration:underline}
+    .wrap{max-width:980px;margin:auto;padding:40px 20px}
+    header{display:flex;gap:16px;align-items:center;margin-bottom:24px}
+    .badge{background:linear-gradient(135deg,var(--brand),#4cd4ff);color:#fff;border-radius:999px;padding:6px 12px;font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.08em}
+    h1{font-size:clamp(28px,4vw,40px);line-height:1.15;margin:.2em 0 .4em}
+    h2{margin-top:1.8em;font-size:clamp(20px,3vw,26px)}
+    .card{background:var(--card);border:1px solid #1c2233;border-radius:16px;padding:22px;margin:16px 0}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
+    ul.check{list-style:none;padding-left:0}
+    ul.check li{margin:.5em 0;padding-left:28px;position:relative}
+    ul.check li:before{content:"✅";position:absolute;left:0}
+    .cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:16px}
+    .btn{display:inline-block;padding:12px 18px;border-radius:12px;font-weight:700}
+    .btn.primary{background:var(--brand);color:#fff}
+    .btn.ghost{border:1px solid #2a3146;color:#dfe5f7}
+    nav.breadcrumbs{font-size:13px;color:var(--muted);margin-bottom:10px}
+    nav.breadcrumbs a{color:var(--muted)}
+    .muted{color:var(--muted)}
+    footer{margin:40px 0 10px;color:#9aa6bd;font-size:13px}
+    .toc a{display:block;padding:8px 0;color:#dfe5f7}
+    .toc a small{color:#9aa6bd}
+    .pill{display:inline-block;border:1px solid #2a3146;border-radius:999px;padding:6px 10px;color:#cbd6ee;margin:4px 6px 0 0;font-size:13px}
+    .note{font-size:14px;color:#aab4c8}
   </style>
 
-  <!-- Breadcrumb + WebSite schema -->
+  <!-- Schema.org JSON-LD -->
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"Article",
+    "headline":"Automate Content AI – AutomateX Turbo",
+    "description":"Use AI to automate content creation: blogs, social media, visuals and ad copy with AutomateX Turbo prompts.",
+    "author":{"@type":"Organization","name":"AutomateX Turbo"},
+    "publisher":{"@type":"Organization","name":"AutomateX Turbo","logo":{"@type":"ImageObject","url":"https://contactautomatex-byte.github.io/automatex-turbo/assets/automatex-logo.png"}},
+    "mainEntityOfPage":"https://contactautomatex-byte.github.io/automatex-turbo/automate-content-ai/",
+    "image":"https://contactautomatex-byte.github.io/automatex-turbo/assets/automatex-social-card.png",
+    "datePublished":"2025-08-24",
+    "dateModified":"2025-09-09"
+  }
+  </script>
   <script type="application/ld+json">
   {
     "@context":"https://schema.org",
     "@type":"BreadcrumbList",
     "itemListElement":[
       {"@type":"ListItem","position":1,"name":"Home","item":"https://contactautomatex-byte.github.io/automatex-turbo/"},
-      {"@type":"ListItem","position":2,"name":"Automate Content Creation with AI","item":"https://contactautomatex-byte.github.io/automatex-turbo/automate-content-ai/"}
+      {"@type":"ListItem","position":2,"name":"Resources","item":"https://contactautomatex-byte.github.io/automatex-turbo/"},
+      {"@type":"ListItem","position":3,"name":"Automate Content AI","item":"https://contactautomatex-byte.github.io/automatex-turbo/automate-content-ai/"}
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"FAQPage",
+    "mainEntity":[
+      {"@type":"Question","name":"What is Automate Content AI?","acceptedAnswer":{"@type":"Answer","text":"It’s a practical guide with prompts from AutomateX Turbo to create blogs, social media content, visuals and ad copy faster."}},
+      {"@type":"Question","name":"Do I need design or copywriting skills?","acceptedAnswer":{"@type":"Answer","text":"No. The prompts generate drafts for you. Just edit and publish."}},
+      {"@type":"Question","name":"Which niches can use this?","acceptedAnswer":{"@type":"Answer","text":"Any: SaaS, ecommerce, services, coaches, creators and small businesses."}}
     ]
   }
   </script>
 </head>
 <body>
   <div class="wrap">
-    <div class="crumbs"><a href="/automatex-turbo/">AutomateX</a> · Automate Content Creation with AI</div>
+    <nav class="breadcrumbs">
+      <a href="https://contactautomatex-byte.github.io/automatex-turbo/">Home</a> ›
+      <span>Automate Content AI</span>
+    </nav>
 
-    <!-- H1 -->
-    <h1>Automate Content Creation with AI</h1>
+    <header>
+      <span class="badge">AutomateX Turbo</span>
+      <div class="muted">AI tools & prompts for growth</div>
+    </header>
 
-    <p>Turn AI into your content ops—templates, tone control and QA prompts.</p>
+    <h1>Automate Content AI – AutomateX Turbo</h1>
+    <p class="muted">Turn AI into your content team: generate blogs, social media posts, visuals and ad copy with ready <strong>AutomateX Turbo prompts</strong>.</p>
 
-    <div class="card">
-      <h3>What you’ll get</h3>
-      <ul>
-        <li>Premium eBook: strategy + SOPs + timelines</li>
-        <li>50+ copy-and-sell AI prompts</li>
-        <li>Top tools stack & quickstart checklists</li>
-      </ul>
-      <a class="btn" href="https://automatexai.gumroad.com/l/automatex-turbo?utm_source=githubpages&utm_medium=seo-page&utm_campaign=automate-content-ai" target="_blank" rel="noopener">
-        Get AutomateX Turbo – $19
-      </a>
+    <div class="card grid">
+      <div>
+        <h2>Table of Contents</h2>
+        <div class="toc">
+          <a href="#blogs">1) Blogs & Articles <small>(SEO optimized)</small></a>
+          <a href="#social">2) Social Media <small>(snippets, carousels)</small></a>
+          <a href="#visuals">3) Visuals & Graphics <small>(AI design prompts)</small></a>
+          <a href="#ads">4) Ad Copy <small>(Google, FB, LinkedIn)</small></a>
+          <a href="#faq">FAQ</a>
+        </div>
+      </div>
+      <div>
+        <h2>Get the Full Toolkit</h2>
+        <p>Unlock 50+ ready prompts, templates and workflows for content, funnels, emails and sales.</p>
+        <div class="cta">
+          <a class="btn primary" href="https://automatexai.gumroad.com/l/automatex-turbo" rel="noopener" target="_blank">Get AutomateX Turbo →</a>
+          <a class="btn ghost" href="https://contactautomatex-byte.github.io/automatex-turbo/">See Overview</a>
+        </div>
+        <div class="note">One-time payment. Instant Gumroad access.</div>
+      </div>
     </div>
 
-    <div class="card">
-      <h3>Quick tips</h3>
-      <ul>
-        <li>Start with Chapter 3 for the core AI tools</li>
-        <li>Use Sales Prompts to ship high-converting assets fast</li>
-        <li>Leverage the bonus cheat sheet to ideate in minutes</li>
+    <!-- 1) BLOGS -->
+    <section id="blogs" class="card">
+      <h2>1) Blogs & Articles</h2>
+      <ul class="check">
+        <li>AI prompt for keyword-based outlines.</li>
+        <li>Generate full drafts with H1, H2 and FAQs.</li>
+        <li>Internal link map for SEO clusters.</li>
       </ul>
+      <div class="pill">SEO</div><div class="pill">content writing</div><div class="pill">long-form</div>
+    </section>
+
+    <!-- 2) SOCIAL -->
+    <section id="social" class="card">
+      <h2>2) Social Media</h2>
+      <ul class="check">
+        <li>Repurpose blog posts into LinkedIn/Twitter threads.</li>
+        <li>Carousel design prompts for Instagram.</li>
+        <li>Short, viral copy prompts for TikTok/Reels captions.</li>
+      </ul>
+      <p class="muted">See also: <a href="https://contactautomatex-byte.github.io/automatex-turbo/ai-marketing-checklist/">AI Marketing Checklist</a>.</p>
+    </section>
+
+    <!-- 3) VISUALS -->
+    <section id="visuals" class="card">
+      <h2>3) Visuals & Graphics</h2>
+      <ul class="check">
+        <li>Generate hero images & infographics prompts.</li>
+        <li>Ad creative ideas using text-to-image tools.</li>
+        <li>Templates for branded social cards.</li>
+      </ul>
+      <p class="muted">Related: <a href="https://contactautomatex-byte.github.io/automatex-turbo/ai-tool-stack-entrepreneurs/">AI Tool Stack</a>.</p>
+    </section>
+
+    <!-- 4) ADS -->
+    <section id="ads" class="card">
+      <h2>4) Ad Copy</h2>
+      <ul class="check">
+        <li>Google Ads prompts for headlines + descriptions.</li>
+        <li>Facebook/Instagram ad copy templates.</li>
+        <li>LinkedIn sponsored post prompts.</li>
+      </ul>
+      <p class="muted">Useful with: <a href="https://contactautomatex-byte.github.io/automatex-turbo/ai-funnel-automation/">AI Funnel Automation</a>.</p>
+    </section>
+
+    <!-- Related Links -->
+    <div class="card">
+      <h2>Related AutomateX Turbo Resources</h2>
+      <div class="grid">
+        <a class="btn ghost" href="https://contactautomatex-byte.github.io/automatex-turbo/ai-email-prompts/">AI Email Prompts</a>
+        <a class="btn ghost" href="https://contactautomatex-byte.github.io/automatex-turbo/ai-funnel-automation/">AI Funnel Automation</a>
+        <a class="btn ghost" href="https://contactautomatex-byte.github.io/automatex-turbo/ai-sales-tools/">AI Sales Tools</a>
+        <a class="btn ghost" href="https://contactautomatex-byte.github.io/automatex-turbo/ai-digital-marketing-prompts/">AI Digital Marketing Prompts</a>
+      </div>
     </div>
 
-    <footer>© 2025 AutomateX • One-time payment • Instant access</footer>
+    <!-- FAQ -->
+    <section id="faq" class="card">
+      <h2>FAQ</h2>
+      <p><strong>Can I use this without AutomateX Turbo?</strong><br/>Yes. The guide is free. AutomateX Turbo unlocks all 50+ prompts & templates.</p>
+      <p><strong>Does this work in multiple languages?</strong><br/>Yes — prompts can be adapted for English, Spanish, Portuguese and more.</p>
+    </section>
+
+    <footer>
+      © <span id="y"></span> AutomateX Turbo • <a href="https://automatexai.gumroad.com/l/automatex-turbo" target="_blank" rel="noopener">Buy on Gumroad</a>
+    </footer>
   </div>
+
+  <script>document.getElementById('y').textContent=new Date().getFullYear()</script>
 </body>
 </html>
-
