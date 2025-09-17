@@ -1,92 +1,198 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta charset="utf-8" />
+  <title>AI Email Prompts – AutomateX Turbo | Sequences, Cold Outreach & Automation</title>
+  <meta name="description" content="AI Email Prompts powered by AutomateX Turbo. 50+ ready-made prompts to write welcome emails, nurture sequences, sales follow-ups and cold outreach with AI." />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="canonical" href="https://contactautomatex-byte.github.io/automatex-turbo/ai-email-prompts/" />
+  <meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1" />
 
-  <!-- TITLE -->
-  <title>AI Email Prompts for High Conversions – AutomateX Turbo</title>
+  <!-- Open Graph -->
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="AI Email Prompts – AutomateX Turbo" />
+  <meta property="og:description" content="50+ AI prompts for email marketing: welcome, nurture, follow-ups and cold outreach." />
+  <meta property="og:url" content="https://contactautomatex-byte.github.io/automatex-turbo/ai-email-prompts/" />
+  <meta property="og:image" content="https://contactautomatex-byte.github.io/automatex-turbo/assets/automatex-social-card.png" />
 
-  <!-- DESCRIPTION -->
-  <meta name="description" content="Proven prompts for cold outreach, nurturing and post-purchase flows."/>
-
-  <link rel="canonical" href="https://contactautomatex-byte.github.io/automatex-turbo/ai-email-prompts/"/>
-  <meta name="robots" content="index,follow"/>
-
-  <!-- Social preview -->
-  <meta property="og:type" content="article"/>
-  <meta property="og:title" content="AI Email Prompts for High Conversions – AutomateX Turbo"/>
-  <meta property="og:description" content="Proven prompts for cold outreach, nurturing and post-purchase flows."/>
-  <meta property="og:url" content="https://contactautomatex-byte.github.io/automatex-turbo/ai-email-prompts/"/>
-  <meta property="og:image" content="https://contactautomatex-byte.github.io/automatex-turbo/assets/AutomateX.png"/>
-  <meta property="og:image:width" content="1200"/>
-  <meta property="og:image:height" content="630"/>
-  <meta name="twitter:card" content="summary_large_image"/>
-  <meta name="twitter:title" content="AI Email Prompts for High Conversions – AutomateX Turbo"/>
-  <meta name="twitter:description" content="Proven prompts for cold outreach, nurturing and post-purchase flows."/>
-  <meta name="twitter:image" content="https://contactautomatex-byte.github.io/automatex-turbo/assets/AutomateX.png"/>
-
-  <link rel="icon" type="image/png" href="/automatex-turbo/assets/favicon.png"/>
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="AI Email Prompts – AutomateX Turbo" />
+  <meta name="twitter:description" content="Boost conversions with AI-written email prompts: sequences, sales, cold outreach." />
+  <meta name="twitter:image" content="https://contactautomatex-byte.github.io/automatex-turbo/assets/automatex-social-card.png" />
 
   <style>
-    :root{--bg:#0a0d1a;--ink:#eef2ff;--muted:#a9b3d8;--card:#11162a;--line:#232c52;--acc:#7c5cff;--acc2:#56e0ff}
-    *{box-sizing:border-box} body{margin:0;font-family:Inter,ui-sans-serif,system-ui;background:#0a0d1a;color:var(--ink);line-height:1.65}
-    a{color:inherit;text-decoration:none}
-    .wrap{max-width:960px;margin:0 auto;padding:28px}
-    .crumbs{font-size:13px;color:var(--muted);margin:6px 0 18px}
-    h1{font-size:34px;line-height:1.15;margin:6px 0 12px}
-    p{color:#d8ddff}
-    .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;margin:14px 0}
-    .btn{display:inline-block;margin-top:10px;background:linear-gradient(135deg,var(--acc),var(--acc2));color:#0b1024;
-         padding:12px 16px;border-radius:12px;font-weight:800;box-shadow:0 10px 28px rgba(124,92,255,.35)}
-    ul{margin:10px 0 0 18px}
-    footer{margin-top:24px;color:var(--muted);font-size:12px;border-top:1px solid var(--line);padding-top:16px}
+    :root{--bg:#0b0d12;--card:#111520;--text:#e9ecf3;--muted:#a7b0c0;--brand:#7c5cff;--acc:#00e0b8;}
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--bg);color:var(--text);font:16px/1.6 system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,"Helvetica Neue",Arial,"Noto Sans",sans-serif}
+    a{color:var(--acc);text-decoration:none}
+    a:hover{text-decoration:underline}
+    .wrap{max-width:980px;margin:auto;padding:40px 20px}
+    header{display:flex;gap:16px;align-items:center;margin-bottom:24px}
+    .badge{background:linear-gradient(135deg,var(--brand),#4cd4ff);color:#fff;border-radius:999px;padding:6px 12px;font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.08em}
+    h1{font-size:clamp(28px,4vw,40px);line-height:1.15;margin:.2em 0 .4em}
+    h2{margin-top:1.8em;font-size:clamp(20px,3vw,26px)}
+    .card{background:var(--card);border:1px solid #1c2233;border-radius:16px;padding:22px;margin:16px 0}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
+    ul.check{list-style:none;padding-left:0}
+    ul.check li{margin:.5em 0;padding-left:28px;position:relative}
+    ul.check li:before{content:"✅";position:absolute;left:0}
+    .cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:16px}
+    .btn{display:inline-block;padding:12px 18px;border-radius:12px;font-weight:700}
+    .btn.primary{background:var(--brand);color:#fff}
+    .btn.ghost{border:1px solid #2a3146;color:#dfe5f7}
+    nav.breadcrumbs{font-size:13px;color:var(--muted);margin-bottom:10px}
+    nav.breadcrumbs a{color:var(--muted)}
+    .muted{color:var(--muted)}
+    footer{margin:40px 0 10px;color:#9aa6bd;font-size:13px}
+    .toc a{display:block;padding:8px 0;color:#dfe5f7}
+    .toc a small{color:#9aa6bd}
+    .pill{display:inline-block;border:1px solid #2a3146;border-radius:999px;padding:6px 10px;color:#cbd6ee;margin:4px 6px 0 0;font-size:13px}
+    .note{font-size:14px;color:#aab4c8}
   </style>
 
-  <!-- Breadcrumb + WebSite schema -->
+  <!-- Schema.org JSON-LD -->
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"Article",
+    "headline":"AI Email Prompts – AutomateX Turbo",
+    "description":"50+ AI prompts to write welcome sequences, nurture flows, sales follow-ups and cold outreach emails.",
+    "author":{"@type":"Organization","name":"AutomateX Turbo"},
+    "publisher":{"@type":"Organization","name":"AutomateX Turbo","logo":{"@type":"ImageObject","url":"https://contactautomatex-byte.github.io/automatex-turbo/assets/automatex-logo.png"}},
+    "mainEntityOfPage":"https://contactautomatex-byte.github.io/automatex-turbo/ai-email-prompts/",
+    "image":"https://contactautomatex-byte.github.io/automatex-turbo/assets/automatex-social-card.png",
+    "datePublished":"2025-08-22",
+    "dateModified":"2025-09-09"
+  }
+  </script>
   <script type="application/ld+json">
   {
     "@context":"https://schema.org",
     "@type":"BreadcrumbList",
     "itemListElement":[
       {"@type":"ListItem","position":1,"name":"Home","item":"https://contactautomatex-byte.github.io/automatex-turbo/"},
-      {"@type":"ListItem","position":2,"name":"AI Email Prompts for High Conversions","item":"https://contactautomatex-byte.github.io/automatex-turbo/ai-email-prompts/"}
+      {"@type":"ListItem","position":2,"name":"Resources","item":"https://contactautomatex-byte.github.io/automatex-turbo/"},
+      {"@type":"ListItem","position":3,"name":"AI Email Prompts","item":"https://contactautomatex-byte.github.io/automatex-turbo/ai-email-prompts/"}
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"FAQPage",
+    "mainEntity":[
+      {"@type":"Question","name":"What are AI Email Prompts?","acceptedAnswer":{"@type":"Answer","text":"They are pre-designed instructions you paste into AI tools to generate effective emails: welcome, nurture, sales, and cold outreach."}},
+      {"@type":"Question","name":"Do these prompts work with any AI tool?","acceptedAnswer":{"@type":"Answer","text":"Yes. They’re tested on ChatGPT, Claude, Gemini and other AI writers."}},
+      {"@type":"Question","name":"Can small businesses use these prompts?","acceptedAnswer":{"@type":"Answer","text":"Absolutely. They save time and ensure professional sequences without hiring expensive copywriters."}}
     ]
   }
   </script>
 </head>
 <body>
   <div class="wrap">
-    <div class="crumbs"><a href="/automatex-turbo/">AutomateX</a> · AI Email Prompts for High Conversions</div>
+    <nav class="breadcrumbs">
+      <a href="https://contactautomatex-byte.github.io/automatex-turbo/">Home</a> ›
+      <span>AI Email Prompts</span>
+    </nav>
 
-    <!-- H1 -->
-    <h1>AI Email Prompts for High Conversions</h1>
+    <header>
+      <span class="badge">AutomateX Turbo</span>
+      <div class="muted">AI tools & prompts for growth</div>
+    </header>
 
-    <p>Turn AI into a revenue channel with copy that gets replies, clicks and sales—fast.</p>
+    <h1>AI Email Prompts – AutomateX Turbo</h1>
+    <p class="muted">Get access to <strong>ready-made AI prompts</strong> to write high-converting emails: welcome flows, nurture sequences, sales follow-ups and cold outreach.</p>
 
-    <div class="card">
-      <h3>What you’ll get</h3>
-      <ul>
-        <li>Premium eBook: strategy + SOPs + timelines</li>
-        <li>50+ copy-and-sell AI prompts</li>
-        <li>Top tools stack & quickstart checklists</li>
-      </ul>
-      <a class="btn" href="https://automatexai.gumroad.com/l/automatex-turbo?utm_source=githubpages&utm_medium=seo-page&utm_campaign=ai-email-prompts" target="_blank" rel="noopener">
-        Get AutomateX Turbo – $19
-      </a>
+    <div class="card grid">
+      <div>
+        <h2>Table of Contents</h2>
+        <div class="toc">
+          <a href="#welcome">1) Welcome Sequences <small>(first impression)</small></a>
+          <a href="#nurture">2) Nurture Emails <small>(educate & engage)</small></a>
+          <a href="#sales">3) Sales Follow-Ups <small>(convert leads)</small></a>
+          <a href="#cold">4) Cold Outreach <small>(B2B, partnerships)</small></a>
+          <a href="#faq">FAQ</a>
+        </div>
+      </div>
+      <div>
+        <h2>Get the Full Toolkit</h2>
+        <p>Unlock 50+ prompts & templates for campaigns, funnels, emails and sales.</p>
+        <div class="cta">
+          <a class="btn primary" href="https://automatexai.gumroad.com/l/automatex-turbo" rel="noopener" target="_blank">Get AutomateX Turbo →</a>
+          <a class="btn ghost" href="https://contactautomatex-byte.github.io/automatex-turbo/">See Overview</a>
+        </div>
+        <div class="note">One-time payment. Instant Gumroad access.</div>
+      </div>
     </div>
 
-    <div class="card">
-      <h3>Quick tips</h3>
-      <ul>
-        <li>Start with Chapter 3 for the core AI tools</li>
-        <li>Use Sales Prompts to ship high-converting assets fast</li>
-        <li>Leverage the bonus cheat sheet to ideate in minutes</li>
+    <!-- 1) WELCOME -->
+    <section id="welcome" class="card">
+      <h2>1) Welcome Sequences</h2>
+      <ul class="check">
+        <li>3-email onboarding flow (value, case study, next step).</li>
+        <li>AI prompts for subject lines that increase open rate.</li>
+        <li>Include CTA to community, demo, or free resource.</li>
       </ul>
+      <div class="pill">welcome</div><div class="pill">onboarding</div><div class="pill">trust</div>
+    </section>
+
+    <!-- 2) NURTURE -->
+    <section id="nurture" class="card">
+      <h2>2) Nurture Emails</h2>
+      <ul class="check">
+        <li>Weekly educational emails with 1 CTA.</li>
+        <li>Behavioral segmentation prompts (clicks, downloads).</li>
+        <li>Templates for story-based nurture emails.</li>
+      </ul>
+      <p class="muted">See: <a href="https://contactautomatex-byte.github.io/automatex-turbo/ai-marketing-checklist/">AI Marketing Checklist</a>.</p>
+    </section>
+
+    <!-- 3) SALES -->
+    <section id="sales" class="card">
+      <h2>3) Sales Follow-Ups</h2>
+      <ul class="check">
+        <li>Objection-handling email templates (pricing, timing).</li>
+        <li>Rhythm: 1-2-5-10 days after last touchpoint.</li>
+        <li>Prompts for personalized case study insertion.</li>
+      </ul>
+      <p class="muted">Also see: <a href="https://contactautomatex-byte.github.io/automatex-turbo/ai-sales-tools/">AI Sales Tools</a>.</p>
+    </section>
+
+    <!-- 4) COLD OUTREACH -->
+    <section id="cold" class="card">
+      <h2>4) Cold Outreach</h2>
+      <ul class="check">
+        <li>Short intro + clear value proposition.</li>
+        <li>Personalization prompt: use LinkedIn/job role data.</li>
+        <li>Follow-up cadence until reply (3–4 attempts).</li>
+      </ul>
+      <p class="muted">Resources: <a href="https://contactautomatex-byte.github.io/automatex-turbo/ai-funnel-automation/">AI Funnel Automation</a>.</p>
+    </section>
+
+    <!-- Related Links -->
+    <div class="card">
+      <h2>Related AutomateX Turbo Resources</h2>
+      <div class="grid">
+        <a class="btn ghost" href="https://contactautomatex-byte.github.io/automatex-turbo/ai-funnel-automation/">AI Funnel Automation</a>
+        <a class="btn ghost" href="https://contactautomatex-byte.github.io/automatex-turbo/ai-content-prompts/">AI Content Prompts</a>
+        <a class="btn ghost" href="https://contactautomatex-byte.github.io/automatex-turbo/ai-digital-marketing-prompts/">AI Digital Marketing Prompts</a>
+        <a class="btn ghost" href="https://contactautomatex-byte.github.io/automatex-turbo/ai-productivity-prompts/">AI Productivity Prompts</a>
+      </div>
     </div>
 
-    <footer>© 2025 AutomateX • One-time payment • Instant access</footer>
+    <!-- FAQ -->
+    <section id="faq" class="card">
+      <h2>FAQ</h2>
+      <p><strong>Are these prompts free?</strong><br/>Yes. This page is free. AutomateX Turbo unlocks the complete library with 50+ prompts and templates.</p>
+      <p><strong>Can I adapt these prompts to my niche?</strong><br/>Yes — the instructions are flexible for SaaS, ecom, services, or solopreneurs.</p>
+    </section>
+
+    <footer>
+      © <span id="y"></span> AutomateX Turbo • <a href="https://automatexai.gumroad.com/l/automatex-turbo" target="_blank" rel="noopener">Buy on Gumroad</a>
+    </footer>
   </div>
+
+  <script>document.getElementById('y').textContent=new Date().getFullYear()</script>
 </body>
 </html>
-
