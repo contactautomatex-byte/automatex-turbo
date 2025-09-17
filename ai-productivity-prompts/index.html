@@ -1,92 +1,198 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta charset="utf-8" />
+  <title>AI Productivity Prompts – AutomateX Turbo | Work Faster with AI</title>
+  <meta name="description" content="AI Productivity Prompts by AutomateX Turbo. 50+ ready prompts to boost productivity: task automation, note-taking, meeting summaries, brainstorming and workflows." />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="canonical" href="https://contactautomatex-byte.github.io/automatex-turbo/ai-productivity-prompts/" />
+  <meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1" />
 
-  <!-- TITLE -->
-  <title>AI Prompts to Boost Productivity – AutomateX Turbo</title>
+  <!-- Open Graph -->
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="AI Productivity Prompts – AutomateX Turbo" />
+  <meta property="og:description" content="50+ AI prompts to work faster: automate tasks, summarize, brainstorm and organize workflows." />
+  <meta property="og:url" content="https://contactautomatex-byte.github.io/automatex-turbo/ai-productivity-prompts/" />
+  <meta property="og:image" content="https://contactautomatex-byte.github.io/automatex-turbo/assets/automatex-social-card.png" />
 
-  <!-- DESCRIPTION -->
-  <meta name="description" content="Stop multitasking; use prompts that plan, prioritize and ship work faster."/>
-
-  <link rel="canonical" href="https://contactautomatex-byte.github.io/automatex-turbo/ai-productivity-prompts/"/>
-  <meta name="robots" content="index,follow"/>
-
-  <!-- Social preview -->
-  <meta property="og:type" content="article"/>
-  <meta property="og:title" content="AI Prompts to Boost Productivity – AutomateX Turbo"/>
-  <meta property="og:description" content="Stop multitasking; use prompts that plan, prioritize and ship work faster."/>
-  <meta property="og:url" content="https://contactautomatex-byte.github.io/automatex-turbo/ai-productivity-prompts/"/>
-  <meta property="og:image" content="https://contactautomatex-byte.github.io/automatex-turbo/assets/AutomateX.png"/>
-  <meta property="og:image:width" content="1200"/>
-  <meta property="og:image:height" content="630"/>
-  <meta name="twitter:card" content="summary_large_image"/>
-  <meta name="twitter:title" content="AI Prompts to Boost Productivity – AutomateX Turbo"/>
-  <meta name="twitter:description" content="Stop multitasking; use prompts that plan, prioritize and ship work faster."/>
-  <meta name="twitter:image" content="https://contactautomatex-byte.github.io/automatex-turbo/assets/AutomateX.png"/>
-
-  <link rel="icon" type="image/png" href="/automatex-turbo/assets/favicon.png"/>
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="AI Productivity Prompts – AutomateX Turbo" />
+  <meta name="twitter:description" content="Boost productivity with AI prompts for workflows, notes, brainstorming and automation." />
+  <meta name="twitter:image" content="https://contactautomatex-byte.github.io/automatex-turbo/assets/automatex-social-card.png" />
 
   <style>
-    :root{--bg:#0a0d1a;--ink:#eef2ff;--muted:#a9b3d8;--card:#11162a;--line:#232c52;--acc:#7c5cff;--acc2:#56e0ff}
-    *{box-sizing:border-box} body{margin:0;font-family:Inter,ui-sans-serif,system-ui;background:#0a0d1a;color:var(--ink);line-height:1.65}
-    a{color:inherit;text-decoration:none}
-    .wrap{max-width:960px;margin:0 auto;padding:28px}
-    .crumbs{font-size:13px;color:var(--muted);margin:6px 0 18px}
-    h1{font-size:34px;line-height:1.15;margin:6px 0 12px}
-    p{color:#d8ddff}
-    .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;margin:14px 0}
-    .btn{display:inline-block;margin-top:10px;background:linear-gradient(135deg,var(--acc),var(--acc2));color:#0b1024;
-         padding:12px 16px;border-radius:12px;font-weight:800;box-shadow:0 10px 28px rgba(124,92,255,.35)}
-    ul{margin:10px 0 0 18px}
-    footer{margin-top:24px;color:var(--muted);font-size:12px;border-top:1px solid var(--line);padding-top:16px}
+    :root{--bg:#0b0d12;--card:#111520;--text:#e9ecf3;--muted:#a7b0c0;--brand:#7c5cff;--acc:#00e0b8;}
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--bg);color:var(--text);font:16px/1.6 system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,"Helvetica Neue",Arial,"Noto Sans",sans-serif}
+    a{color:var(--acc);text-decoration:none}
+    a:hover{text-decoration:underline}
+    .wrap{max-width:980px;margin:auto;padding:40px 20px}
+    header{display:flex;gap:16px;align-items:center;margin-bottom:24px}
+    .badge{background:linear-gradient(135deg,var(--brand),#4cd4ff);color:#fff;border-radius:999px;padding:6px 12px;font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.08em}
+    h1{font-size:clamp(28px,4vw,40px);line-height:1.15;margin:.2em 0 .4em}
+    h2{margin-top:1.8em;font-size:clamp(20px,3vw,26px)}
+    .card{background:var(--card);border:1px solid #1c2233;border-radius:16px;padding:22px;margin:16px 0}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
+    ul.check{list-style:none;padding-left:0}
+    ul.check li{margin:.5em 0;padding-left:28px;position:relative}
+    ul.check li:before{content:"✅";position:absolute;left:0}
+    .cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:16px}
+    .btn{display:inline-block;padding:12px 18px;border-radius:12px;font-weight:700}
+    .btn.primary{background:var(--brand);color:#fff}
+    .btn.ghost{border:1px solid #2a3146;color:#dfe5f7}
+    nav.breadcrumbs{font-size:13px;color:var(--muted);margin-bottom:10px}
+    nav.breadcrumbs a{color:var(--muted)}
+    .muted{color:var(--muted)}
+    footer{margin:40px 0 10px;color:#9aa6bd;font-size:13px}
+    .toc a{display:block;padding:8px 0;color:#dfe5f7}
+    .toc a small{color:#9aa6bd}
+    .pill{display:inline-block;border:1px solid #2a3146;border-radius:999px;padding:6px 10px;color:#cbd6ee;margin:4px 6px 0 0;font-size:13px}
+    .note{font-size:14px;color:#aab4c8}
   </style>
 
-  <!-- Breadcrumb + WebSite schema -->
+  <!-- Schema.org JSON-LD -->
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"Article",
+    "headline":"AI Productivity Prompts – AutomateX Turbo",
+    "description":"AI prompts for productivity: automate tasks, summarize, brainstorm and organize workflows.",
+    "author":{"@type":"Organization","name":"AutomateX Turbo"},
+    "publisher":{"@type":"Organization","name":"AutomateX Turbo","logo":{"@type":"ImageObject","url":"https://contactautomatex-byte.github.io/automatex-turbo/assets/automatex-logo.png"}},
+    "mainEntityOfPage":"https://contactautomatex-byte.github.io/automatex-turbo/ai-productivity-prompts/",
+    "image":"https://contactautomatex-byte.github.io/automatex-turbo/assets/automatex-social-card.png",
+    "datePublished":"2025-08-30",
+    "dateModified":"2025-09-09"
+  }
+  </script>
   <script type="application/ld+json">
   {
     "@context":"https://schema.org",
     "@type":"BreadcrumbList",
     "itemListElement":[
       {"@type":"ListItem","position":1,"name":"Home","item":"https://contactautomatex-byte.github.io/automatex-turbo/"},
-      {"@type":"ListItem","position":2,"name":"AI Prompts to Boost Productivity","item":"https://contactautomatex-byte.github.io/automatex-turbo/ai-productivity-prompts/"}
+      {"@type":"ListItem","position":2,"name":"Resources","item":"https://contactautomatex-byte.github.io/automatex-turbo/"},
+      {"@type":"ListItem","position":3,"name":"AI Productivity Prompts","item":"https://contactautomatex-byte.github.io/automatex-turbo/ai-productivity-prompts/"}
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"FAQPage",
+    "mainEntity":[
+      {"@type":"Question","name":"What are AI Productivity Prompts?","acceptedAnswer":{"@type":"Answer","text":"They are pre-made instructions you give to AI tools to automate tasks, take notes, summarize meetings, brainstorm ideas and improve workflows."}},
+      {"@type":"Question","name":"Do they work with any AI model?","acceptedAnswer":{"@type":"Answer","text":"Yes. They work with ChatGPT, Claude, Gemini and other AI assistants."}},
+      {"@type":"Question","name":"Can small teams use this?","acceptedAnswer":{"@type":"Answer","text":"Yes — solopreneurs, freelancers and teams can use them to save time and focus on execution."}}
     ]
   }
   </script>
 </head>
 <body>
   <div class="wrap">
-    <div class="crumbs"><a href="/automatex-turbo/">AutomateX</a> · AI Prompts to Boost Productivity</div>
+    <nav class="breadcrumbs">
+      <a href="https://contactautomatex-byte.github.io/automatex-turbo/">Home</a> ›
+      <span>AI Productivity Prompts</span>
+    </nav>
 
-    <!-- H1 -->
-    <h1>AI Prompts to Boost Productivity</h1>
+    <header>
+      <span class="badge">AutomateX Turbo</span>
+      <div class="muted">AI tools & prompts for growth</div>
+    </header>
 
-    <p>A set of daily prompts to manage tasks, summarize info and remove friction.</p>
+    <h1>AI Productivity Prompts – AutomateX Turbo</h1>
+    <p class="muted">Work smarter with <strong>ready-made AI prompts</strong> to automate tasks, summarize meetings, brainstorm ideas, and organize workflows — powered by AutomateX Turbo.</p>
 
-    <div class="card">
-      <h3>What you’ll get</h3>
-      <ul>
-        <li>Premium eBook: strategy + SOPs + timelines</li>
-        <li>50+ copy-and-sell AI prompts</li>
-        <li>Top tools stack & quickstart checklists</li>
-      </ul>
-      <a class="btn" href="https://automatexai.gumroad.com/l/automatex-turbo?utm_source=githubpages&utm_medium=seo-page&utm_campaign=ai-productivity-prompts" target="_blank" rel="noopener">
-        Get AutomateX Turbo – $19
-      </a>
+    <div class="card grid">
+      <div>
+        <h2>Table of Contents</h2>
+        <div class="toc">
+          <a href="#tasks">1) Task Automation <small>(repetitive work)</small></a>
+          <a href="#notes">2) Notes & Summaries <small>(meetings, docs)</small></a>
+          <a href="#brainstorm">3) Brainstorming <small>(ideas & outlines)</small></a>
+          <a href="#workflow">4) Workflow Optimization <small>(systems & focus)</small></a>
+          <a href="#faq">FAQ</a>
+        </div>
+      </div>
+      <div>
+        <h2>Get the Full Toolkit</h2>
+        <p>Unlock all 50+ productivity, marketing, email and sales prompts with AutomateX Turbo.</p>
+        <div class="cta">
+          <a class="btn primary" href="https://automatexai.gumroad.com/l/automatex-turbo" rel="noopener" target="_blank">Get AutomateX Turbo →</a>
+          <a class="btn ghost" href="https://contactautomatex-byte.github.io/automatex-turbo/">See Overview</a>
+        </div>
+        <div class="note">One-time payment. Instant Gumroad access.</div>
+      </div>
     </div>
 
-    <div class="card">
-      <h3>Quick tips</h3>
-      <ul>
-        <li>Start with Chapter 3 for the core AI tools</li>
-        <li>Use Sales Prompts to ship high-converting assets fast</li>
-        <li>Leverage the bonus cheat sheet to ideate in minutes</li>
+    <!-- 1) TASKS -->
+    <section id="tasks" class="card">
+      <h2>1) Task Automation</h2>
+      <ul class="check">
+        <li>Prompts for automating repetitive reports.</li>
+        <li>Calendar & scheduling automation.</li>
+        <li>Email sorting and task delegation prompts.</li>
       </ul>
+      <div class="pill">automation</div><div class="pill">efficiency</div><div class="pill">time saver</div>
+    </section>
+
+    <!-- 2) NOTES -->
+    <section id="notes" class="card">
+      <h2>2) Notes & Summaries</h2>
+      <ul class="check">
+        <li>Meeting summary prompts with action items.</li>
+        <li>Note-taking frameworks for lectures or research.</li>
+        <li>Condensing long documents into bullet points.</li>
+      </ul>
+      <p class="muted">Also see: <a href="https://contactautomatex-byte.github.io/automatex-turbo/ai-email-prompts/">AI Email Prompts</a>.</p>
+    </section>
+
+    <!-- 3) BRAINSTORM -->
+    <section id="brainstorm" class="card">
+      <h2>3) Brainstorming</h2>
+      <ul class="check">
+        <li>Idea generation prompts for campaigns.</li>
+        <li>Outlining articles, scripts or presentations.</li>
+        <li>Mind mapping & creative expansion frameworks.</li>
+      </ul>
+      <p class="muted">Useful with: <a href="https://contactautomatex-byte.github.io/automatex-turbo/automate-content-ai/">Automate Content AI</a>.</p>
+    </section>
+
+    <!-- 4) WORKFLOW -->
+    <section id="workflow" class="card">
+      <h2>4) Workflow Optimization</h2>
+      <ul class="check">
+        <li>Daily prioritization prompts (MIT method).</li>
+        <li>Systemizing recurring processes with AI.</li>
+        <li>Focus/anti-distraction prompt sets.</li>
+      </ul>
+      <p class="muted">See also: <a href="https://contactautomatex-byte.github.io/automatex-turbo/ai-sales-tools/">AI Sales Tools</a>.</p>
+    </section>
+
+    <!-- Related Links -->
+    <div class="card">
+      <h2>Related AutomateX Turbo Resources</h2>
+      <div class="grid">
+        <a class="btn ghost" href="https://contactautomatex-byte.github.io/automatex-turbo/ai-digital-marketing-prompts/">AI Digital Marketing Prompts</a>
+        <a class="btn ghost" href="https://contactautomatex-byte.github.io/automatex-turbo/ai-funnel-automation/">AI Funnel Automation</a>
+        <a class="btn ghost" href="https://contactautomatex-byte.github.io/automatex-turbo/automate-content-ai/">Automate Content AI</a>
+        <a class="btn ghost" href="https://contactautomatex-byte.github.io/automatex-turbo/ai-marketing-checklist/">AI Marketing Checklist</a>
+      </div>
     </div>
 
-    <footer>© 2025 AutomateX • One-time payment • Instant access</footer>
+    <!-- FAQ -->
+    <section id="faq" class="card">
+      <h2>FAQ</h2>
+      <p><strong>Are these prompts free?</strong><br/>Yes. This page is free. AutomateX Turbo unlocks the complete productivity library + marketing & sales prompts.</p>
+      <p><strong>Can I adapt them for personal and business use?</strong><br/>Yes — they’re flexible for students, freelancers, entrepreneurs and teams.</p>
+    </section>
+
+    <footer>
+      © <span id="y"></span> AutomateX Turbo • <a href="https://automatexai.gumroad.com/l/automatex-turbo" target="_blank" rel="noopener">Buy on Gumroad</a>
+    </footer>
   </div>
+
+  <script>document.getElementById('y').textContent=new Date().getFullYear()</script>
 </body>
 </html>
-
