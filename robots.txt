@@ -1,3 +1,13 @@
 User-agent: *
 Allow: /
+
+# Bloqueia parâmetros desnecessários
+Disallow: /*?*
+
+# Sitemap atualizado
 Sitemap: https://contactautomatex-byte.github.io/automatex-turbo/sitemap.xml
+
+# Regras extras para Googlebot (mais rápido na indexação)
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 1
