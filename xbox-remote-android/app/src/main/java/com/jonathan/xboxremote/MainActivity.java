@@ -3,10 +3,16 @@ package com.jonathan.xboxremote;
 import android.Manifest;
 import android.app.Activity;
 import android.content.pm.PackageManager;
+import android.content.res.ColorStateList;
+import android.content.res.Configuration;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.RippleDrawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.Gravity;
+import android.view.HapticFeedbackConstants;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -23,97 +29,237 @@ import java.util.List;
 public class MainActivity extends Activity implements SmartGlassClient.Listener {
     private SmartGlassClient client;
     private TextView status;
+    private TextView statusDot;
     private EditText ipField;
     private Button connectButton;
     private final List<Button> remoteButtons = new ArrayList<>();
     private static final int REQ_NEARBY_WIFI = 2001;
     private String pendingIp = "";
 
-    private static final int BG = Color.rgb(11, 15, 20);
-    private static final int PANEL = Color.rgb(27, 33, 41);
+    private static final int BG = Color.rgb(8, 12, 17);
+    private static final int PANEL = Color.rgb(22, 28, 35);
+    private static final int PANEL_2 = Color.rgb(31, 38, 47);
+    private static final int BORDER = Color.rgb(48, 57, 69);
     private static final int GREEN = Color.rgb(16, 124, 16);
-    private static final int TEXT = Color.rgb(245, 247, 250);
-    private static final int MUTED = Color.rgb(174, 183, 194);
+    private static final int TEXT = Color.rgb(246, 248, 250);
+    private static final int MUTED = Color.rgb(157, 167, 179);
+    private static final int RED = Color.rgb(218, 54, 51);
+    private static final int BLUE = Color.rgb(30, 136, 229);
+    private static final int YELLOW = Color.rgb(246, 196, 42);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        getWindow().setStatusBarColor(BG);
+        getWindow().setNavigationBarColor(BG);
         client = new SmartGlassClient(this);
         setContentView(buildUi());
         setRemoteEnabled(false);
     }
 
     private View buildUi() {
+        boolean landscape = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
+        int screenWidth = getResources().getDisplayMetrics().widthPixels;
+        int screenHeight = getResources().getDisplayMetrics().heightPixels;
+        int horizontalPad = landscape ? 18 : 16;
+        int availableWidth = screenWidth - dp(horizontalPad * 2);
+
         ScrollView scroll = new ScrollView(this);
         scroll.setFillViewport(true);
         scroll.setBackgroundColor(BG);
+        scroll.setClipToPadding(false);
 
         LinearLayout root = new LinearLayout(this);
         root.setOrientation(LinearLayout.VERTICAL);
-        root.setPadding(dp(18), dp(20), dp(18), dp(28));
+        root.setPadding(dp(horizontalPad), dp(14), dp(horizontalPad), dp(22));
         scroll.addView(root, new ScrollView.LayoutParams(-1, -2));
 
-        TextView title = text("Xbox Controle", 28, TEXT, true);
-        root.addView(title);
-        TextView subtitle = text("Controle local para Xbox One / Series via Wi‑Fi (SmartGlass)", 14, MUTED, false);
-        root.addView(subtitle, lp(-1, -2, 0, 4, 0, 18));
+        LinearLayout header = new LinearLayout(this);
+        header.setOrientation(LinearLayout.HORIZONTAL);
+        header.setGravity(Gravity.CENTER_VERTICAL);
 
-        status = text("Desconectado", 16, TEXT, true);
-        status.setPadding(dp(14), dp(12), dp(14), dp(12));
-        status.setBackground(roundRect(PANEL, 14));
-        root.addView(status, lp(-1, -2, 0, 0, 0, 14));
+        LinearLayout titleBlock = new LinearLayout(this);
+        titleBlock.setOrientation(LinearLayout.VERTICAL);
+        TextView title = text("Xbox Controle", landscape ? 24 : 28, TEXT, true);
+        TextView subtitle = text("Controle local via Wi‑Fi", 13, MUTED, false);
+        titleBlock.addView(title);
+        titleBlock.addView(subtitle, lp(-2, -2, 0, 1, 0, 0));
+        header.addView(titleBlock, new LinearLayout.LayoutParams(0, -2, 1f));
 
-        ipField = new EditText(this);
-        ipField.setHint("IP do Xbox (opcional, ex.: 192.168.1.14)");
-        ipField.setHintTextColor(MUTED);
-        ipField.setTextColor(TEXT);
-        ipField.setSingleLine(true);
-        ipField.setPadding(dp(14), dp(12), dp(14), dp(12));
-        ipField.setBackground(roundRect(PANEL, 12));
-        root.addView(ipField, lp(-1, dp(52), 0, 0, 0, 10));
+        TextView brand = text("XBOX", 12, TEXT, true);
+        brand.setGravity(Gravity.CENTER);
+        brand.setBackground(roundRect(GREEN, 14));
+        header.addView(brand, lp(dp(64), dp(32), 8, 0, 0, 0));
+        root.addView(header, lp(-1, -2, 0, 0, 0, 14));
+
+        LinearLayout connectionCard = new LinearLayout(this);
+        connectionCard.setOrientation(LinearLayout.VERTICAL);
+        connectionCard.setPadding(dp(14), dp(12), dp(14), dp(12));
+        connectionCard.setBackground(roundRectStroke(PANEL, BORDER, 16, 1));
+
+        LinearLayout connectionTop = new LinearLayout(this);
+        connectionTop.setOrientation(LinearLayout.HORIZONTAL);
+        connectionTop.setGravity(Gravity.CENTER_VERTICAL);
+
+        statusDot = text("●", 15, MUTED, true);
+        connectionTop.addView(statusDot, lp(dp(20), -2, 0, 0, 6, 0));
+
+        status = text("Desconectado", 15, TEXT, true);
+        status.setMaxLines(2);
+        connectionTop.addView(status, new LinearLayout.LayoutParams(0, -2, 1f));
 
         connectButton = new Button(this);
-        connectButton.setText("LOCALIZAR E CONECTAR");
+        connectButton.setText("Conectar");
         connectButton.setTextColor(Color.WHITE);
-        connectButton.setTextSize(15);
-        connectButton.setBackground(roundRect(GREEN, 12));
+        connectButton.setTextSize(12);
+        connectButton.setTypeface(Typeface.DEFAULT, Typeface.BOLD);
+        connectButton.setAllCaps(false);
+        connectButton.setPadding(dp(12), 0, dp(12), 0);
+        connectButton.setMinHeight(0);
+        connectButton.setMinWidth(0);
+        connectButton.setBackground(rippleRound(GREEN, 12));
         connectButton.setOnClickListener(v -> beginConnect());
-        root.addView(connectButton, lp(-1, dp(54), 0, 0, 0, 18));
+        connectionTop.addView(connectButton, lp(dp(104), dp(40), 10, 0, 0, 0));
+        connectionCard.addView(connectionTop);
 
-        TextView hint = text("O celular e o Xbox precisam estar na mesma rede. O campo de IP pode ficar vazio: o app tenta localizar o console automaticamente.", 13, MUTED, false);
-        root.addView(hint, lp(-1, -2, 0, 0, 0, 20));
+        ipField = new EditText(this);
+        ipField.setHint("IP do Xbox (opcional)");
+        ipField.setHintTextColor(MUTED);
+        ipField.setTextColor(TEXT);
+        ipField.setTextSize(13);
+        ipField.setSingleLine(true);
+        ipField.setPadding(dp(12), 0, dp(12), 0);
+        ipField.setBackground(roundRectStroke(PANEL_2, BORDER, 11, 1));
+        connectionCard.addView(ipField, lp(-1, dp(44), 0, 10, 0, 0));
 
-        TextView nav = text("NAVEGAÇÃO", 13, MUTED, true);
-        root.addView(nav, lp(-1, -2, 0, 0, 0, 8));
+        root.addView(connectionCard, lp(-1, -2, 0, 0, 0, landscape ? 12 : 16));
 
-        GridLayout dpad = new GridLayout(this);
-        dpad.setColumnCount(3);
-        dpad.setRowCount(3);
-        addCell(dpad, null, 0);
-        addCell(dpad, remote("▲", SmartGlassClient.BTN_UP), 1);
-        addCell(dpad, null, 2);
-        addCell(dpad, remote("◀", SmartGlassClient.BTN_LEFT), 3);
-        Button aCenter = remote("A", SmartGlassClient.BTN_A);
-        aCenter.setBackground(roundRect(GREEN, 18));
-        addCell(dpad, aCenter, 4);
-        addCell(dpad, remote("▶", SmartGlassClient.BTN_RIGHT), 5);
-        addCell(dpad, remote("B", SmartGlassClient.BTN_B), 6);
-        addCell(dpad, remote("▼", SmartGlassClient.BTN_DOWN), 7);
-        addCell(dpad, remote("⌂", SmartGlassClient.BTN_NEXUS), 8);
-        root.addView(dpad, lp(-1, dp(246), 0, 0, 0, 18));
+        LinearLayout controllerShell = new LinearLayout(this);
+        controllerShell.setOrientation(LinearLayout.VERTICAL);
+        controllerShell.setPadding(dp(12), dp(12), dp(12), dp(14));
+        controllerShell.setBackground(roundRectStroke(Color.rgb(15, 20, 26), BORDER, 24, 1));
 
-        GridLayout actions = new GridLayout(this);
-        actions.setColumnCount(4);
-        addAction(actions, remote("X", SmartGlassClient.BTN_X));
-        addAction(actions, remote("Y", SmartGlassClient.BTN_Y));
-        addAction(actions, remote("VIEW", SmartGlassClient.BTN_VIEW));
-        addAction(actions, remote("MENU", SmartGlassClient.BTN_MENU));
-        root.addView(actions, lp(-1, dp(68), 0, 0, 0, 18));
+        LinearLayout centerStrip = new LinearLayout(this);
+        centerStrip.setGravity(Gravity.CENTER);
+        centerStrip.setOrientation(LinearLayout.HORIZONTAL);
+        Button view = compactRemote("VIEW", SmartGlassClient.BTN_VIEW);
+        Button home = compactRemote("⌂", SmartGlassClient.BTN_NEXUS);
+        home.setTextSize(24);
+        home.setBackground(rippleRound(Color.rgb(50, 57, 67), 24));
+        Button menu = compactRemote("MENU", SmartGlassClient.BTN_MENU);
+        centerStrip.addView(view, lp(dp(76), dp(42), 0, 0, 8, 0));
+        centerStrip.addView(home, lp(dp(54), dp(46), 0, 0, 8, 0));
+        centerStrip.addView(menu, lp(dp(76), dp(42), 0, 0, 0, 0));
+        controllerShell.addView(centerStrip, lp(-1, -2, 0, 0, 0, 12));
 
-        TextView note = text("Se aparecer ‘conexões anônimas desativadas’, o próprio Xbox está bloqueando controles locais sem login. O app mostrará o motivo exato retornado pelo console.", 12, MUTED, false);
-        root.addView(note);
+        int cluster;
+        if (landscape) {
+            int maxByHeight = Math.max(dp(180), screenHeight - dp(170));
+            cluster = Math.min(dp(230), Math.min((availableWidth - dp(70)) / 2, maxByHeight));
+        } else {
+            int gap = dp(12);
+            cluster = Math.min(dp(190), (availableWidth - dp(24) - gap) / 2);
+            if (cluster < dp(132)) cluster = dp(132);
+        }
+
+        LinearLayout controlRow = new LinearLayout(this);
+        controlRow.setOrientation(LinearLayout.HORIZONTAL);
+        controlRow.setGravity(Gravity.CENTER);
+        controlRow.addView(buildDpad(cluster), lp(cluster, cluster, 0, 0, landscape ? 26 : 12, 0));
+        controlRow.addView(buildFaceButtons(cluster), lp(cluster, cluster, 0, 0, 0, 0));
+        controllerShell.addView(controlRow, new LinearLayout.LayoutParams(-1, -2));
+
+        root.addView(controllerShell, lp(-1, -2, 0, 0, 0, 12));
+
+        TextView footer = text("Botões grandes e layout responsivo para usar como controle remoto.", 12, MUTED, false);
+        footer.setGravity(Gravity.CENTER);
+        root.addView(footer, lp(-1, -2, 4, 0, 4, 0));
         return scroll;
+    }
+
+    private View buildDpad(int size) {
+        GridLayout grid = new GridLayout(this);
+        grid.setColumnCount(3);
+        grid.setRowCount(3);
+        grid.setPadding(dp(3), dp(3), dp(3), dp(3));
+        grid.setBackground(roundRect(PANEL, 22));
+
+        addCell(grid, null, 0, size);
+        addCell(grid, dpadButton("▲", SmartGlassClient.BTN_UP), 1, size);
+        addCell(grid, null, 2, size);
+        addCell(grid, dpadButton("◀", SmartGlassClient.BTN_LEFT), 3, size);
+        View center = new View(this);
+        center.setBackground(roundRect(Color.rgb(46, 53, 62), 16));
+        addCell(grid, center, 4, size);
+        addCell(grid, dpadButton("▶", SmartGlassClient.BTN_RIGHT), 5, size);
+        addCell(grid, null, 6, size);
+        addCell(grid, dpadButton("▼", SmartGlassClient.BTN_DOWN), 7, size);
+        addCell(grid, null, 8, size);
+        return grid;
+    }
+
+    private View buildFaceButtons(int size) {
+        GridLayout grid = new GridLayout(this);
+        grid.setColumnCount(3);
+        grid.setRowCount(3);
+        grid.setPadding(dp(3), dp(3), dp(3), dp(3));
+        grid.setBackground(roundRect(PANEL, 22));
+
+        addCell(grid, null, 0, size);
+        addCell(grid, faceButton("Y", SmartGlassClient.BTN_Y, YELLOW, Color.BLACK), 1, size);
+        addCell(grid, null, 2, size);
+        addCell(grid, faceButton("X", SmartGlassClient.BTN_X, BLUE, Color.WHITE), 3, size);
+        addCell(grid, null, 4, size);
+        addCell(grid, faceButton("B", SmartGlassClient.BTN_B, RED, Color.WHITE), 5, size);
+        addCell(grid, null, 6, size);
+        addCell(grid, faceButton("A", SmartGlassClient.BTN_A, GREEN, Color.WHITE), 7, size);
+        addCell(grid, null, 8, size);
+        return grid;
+    }
+
+    private Button dpadButton(String label, int mask) {
+        Button b = remoteBase(label, mask);
+        b.setTextSize(24);
+        b.setBackground(rippleRound(Color.rgb(48, 55, 65), 16));
+        return b;
+    }
+
+    private Button faceButton(String label, int mask, int color, int textColor) {
+        Button b = remoteBase(label, mask);
+        b.setTextColor(textColor);
+        b.setTextSize(24);
+        b.setTypeface(Typeface.DEFAULT, Typeface.BOLD);
+        b.setBackground(rippleRound(color, 40));
+        return b;
+    }
+
+    private Button compactRemote(String label, int mask) {
+        Button b = remoteBase(label, mask);
+        b.setTextSize(label.length() > 2 ? 11 : 19);
+        b.setBackground(rippleRound(PANEL_2, 14));
+        return b;
+    }
+
+    private Button remoteBase(String label, int mask) {
+        Button b = new Button(this);
+        b.setText(label);
+        b.setTextColor(TEXT);
+        b.setAllCaps(false);
+        b.setGravity(Gravity.CENTER);
+        b.setPadding(0, 0, 0, 0);
+        b.setMinWidth(0);
+        b.setMinHeight(0);
+        b.setOnClickListener(v -> {
+            v.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP);
+            if (!client.isConnected()) {
+                Toast.makeText(this, "Conecte ao Xbox primeiro", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            client.sendButton(mask);
+        });
+        remoteButtons.add(b);
+        return b;
     }
 
     private void beginConnect() {
@@ -129,6 +275,8 @@ public class MainActivity extends Activity implements SmartGlassClient.Listener 
     private void connectNow(String ip) {
         connectButton.setEnabled(false);
         setRemoteEnabled(false);
+        statusDot.setTextColor(MUTED);
+        status.setText("Procurando Xbox…");
         client.connect(ip);
     }
 
@@ -145,46 +293,23 @@ public class MainActivity extends Activity implements SmartGlassClient.Listener 
         }
     }
 
-    private Button remote(String label, int mask) {
-        Button b = new Button(this);
-        b.setText(label);
-        b.setTextSize(label.length() > 2 ? 12 : 21);
-        b.setTextColor(TEXT);
-        b.setBackground(roundRect(PANEL, 18));
-        b.setOnClickListener(v -> {
-            if (!client.isConnected()) {
-                Toast.makeText(this, "Conecte ao Xbox primeiro", Toast.LENGTH_SHORT).show();
-                return;
-            }
-            client.sendButton(mask);
-        });
-        remoteButtons.add(b);
-        return b;
-    }
-
-    private void addCell(GridLayout grid, Button button, int index) {
-        View v = button;
-        if (v == null) v = new View(this);
+    private void addCell(GridLayout grid, View view, int index, int clusterSize) {
+        View v = view == null ? new View(this) : view;
+        int cell = Math.max(dp(42), clusterSize / 3);
         GridLayout.LayoutParams p = new GridLayout.LayoutParams();
         p.rowSpec = GridLayout.spec(index / 3, 1f);
         p.columnSpec = GridLayout.spec(index % 3, 1f);
-        p.width = 0;
-        p.height = 0;
-        p.setMargins(dp(5), dp(5), dp(5), dp(5));
+        p.width = cell - dp(4);
+        p.height = cell - dp(4);
+        p.setMargins(dp(2), dp(2), dp(2), dp(2));
         grid.addView(v, p);
     }
 
-    private void addAction(GridLayout grid, Button b) {
-        GridLayout.LayoutParams p = new GridLayout.LayoutParams();
-        p.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 1f);
-        p.width = 0;
-        p.height = -1;
-        p.setMargins(dp(4), dp(4), dp(4), dp(4));
-        grid.addView(b, p);
-    }
-
     private void setRemoteEnabled(boolean enabled) {
-        for (Button b : remoteButtons) b.setEnabled(enabled);
+        for (Button b : remoteButtons) {
+            b.setEnabled(enabled);
+            b.setAlpha(enabled ? 1f : 0.42f);
+        }
     }
 
     @Override public void onStatus(String message) {
@@ -194,8 +319,9 @@ public class MainActivity extends Activity implements SmartGlassClient.Listener 
     @Override public void onConnected(String consoleName, String ip) {
         runOnUiThread(() -> {
             ipField.setText(ip);
-            status.setText("Conectado: " + consoleName + "  •  " + ip);
-            connectButton.setText("RECONECTAR");
+            statusDot.setTextColor(Color.rgb(62, 201, 84));
+            status.setText(consoleName + "  •  " + ip);
+            connectButton.setText("Reconectar");
             connectButton.setEnabled(true);
             setRemoteEnabled(true);
         });
@@ -203,18 +329,20 @@ public class MainActivity extends Activity implements SmartGlassClient.Listener 
 
     @Override public void onConnectionFailed(String reason) {
         runOnUiThread(() -> {
+            statusDot.setTextColor(RED);
             status.setText(reason);
             connectButton.setEnabled(true);
-            connectButton.setText("TENTAR NOVAMENTE");
+            connectButton.setText("Tentar");
             setRemoteEnabled(false);
         });
     }
 
     @Override public void onDisconnected(String reason) {
         runOnUiThread(() -> {
+            statusDot.setTextColor(MUTED);
             status.setText(reason);
             connectButton.setEnabled(true);
-            connectButton.setText("CONECTAR NOVAMENTE");
+            connectButton.setText("Conectar");
             setRemoteEnabled(false);
         });
     }
@@ -229,7 +357,7 @@ public class MainActivity extends Activity implements SmartGlassClient.Listener 
         t.setText(value);
         t.setTextSize(sp);
         t.setTextColor(color);
-        if (bold) t.setTypeface(t.getTypeface(), android.graphics.Typeface.BOLD);
+        if (bold) t.setTypeface(Typeface.DEFAULT, Typeface.BOLD);
         return t;
     }
 
@@ -238,6 +366,18 @@ public class MainActivity extends Activity implements SmartGlassClient.Listener 
         g.setColor(color);
         g.setCornerRadius(dp(radiusDp));
         return g;
+    }
+
+    private GradientDrawable roundRectStroke(int color, int strokeColor, int radiusDp, int strokeDp) {
+        GradientDrawable g = roundRect(color, radiusDp);
+        g.setStroke(dp(strokeDp), strokeColor);
+        return g;
+    }
+
+    private RippleDrawable rippleRound(int color, int radiusDp) {
+        GradientDrawable content = roundRect(color, radiusDp);
+        GradientDrawable mask = roundRect(Color.WHITE, radiusDp);
+        return new RippleDrawable(ColorStateList.valueOf(Color.argb(70, 255, 255, 255)), content, mask);
     }
 
     private LinearLayout.LayoutParams lp(int w, int h, int l, int t, int r, int b) {
