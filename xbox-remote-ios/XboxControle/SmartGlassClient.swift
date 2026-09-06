@@ -3,7 +3,6 @@ import CryptoKit
 import Security
 import Darwin
 
-@MainActor
 final class SmartGlassClient: ObservableObject {
     @Published var status = "Desconectado"
     @Published var connected = false
@@ -332,7 +331,7 @@ final class SmartGlassClient: ObservableObject {
             guard let self else { return }
             while !Task.isCancelled {
                 try? await Task.sleep(nanoseconds: 3_000_000_000)
-                guard await self.connected else { continue }
+                guard self.connected else { continue }
                 try? self.ioQueue.sync { try self.sendAck(processed: [], rejected: [], needAck: true) }
             }
         }
@@ -352,7 +351,10 @@ final class SmartGlassClient: ObservableObject {
             let result = m.payload.readBEUInt32(at: 12)
             if requestID == 1 && result == 0 { systemInputChannel = channel }
         } else if m.type == Self.msgDisconnect {
-            Task { @MainActor in self.connected = false; self.status = "Conexão com o Xbox encerrada." }
+            DispatchQueue.main.async {
+                self.connected = false
+                self.status = "Conexão com o Xbox encerrada."
+            }
         }
         return m
     }
