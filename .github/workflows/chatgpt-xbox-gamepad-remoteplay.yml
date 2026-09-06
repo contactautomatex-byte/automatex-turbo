@@ -45,15 +45,19 @@ jobs:
           cd xbox-game-engine
           git checkout 9d7649d477b71a674ab72842e950e977e60baedb
 
-      - name: Rebrand and prepare Android build
+      - name: Rebrand and force device-code login
         run: |
           python3 - <<'PY'
           from pathlib import Path
+
+          # App name
           p = Path('xbox-game-engine/android/app/src/main/res/values/strings.xml')
           p.write_text(p.read_text().replace('>XStreaming<','>Xbox Controle Game<'))
+
+          # New package id avoids Android signature conflict with v2.0.0
           g = Path('xbox-game-engine/android/app/build.gradle')
           s = g.read_text()
-          s = s.replace('applicationId "com.dev.xstreaming"','applicationId "com.jonathan.xboxcontrole.game"')
+          s = s.replace('applicationId "com.dev.xstreaming"','applicationId "com.jonathan.xboxcontrole.game201"')
           s = s.replace('signingConfig signingConfigs.release','signingConfig signingConfigs.debug')
           needle = 'return "darwin-x86_64"'
           replacement = 'return System.getProperty("os.name").toLowerCase().contains("linux") ? "linux-x86_64" : "darwin-x86_64"'
@@ -61,10 +65,33 @@ jobs:
               raise SystemExit('NDK host fallback not found')
           s = s.replace(needle, replacement, 1)
           g.write_text(s)
+
+          # Force MSAL/device-code authentication by default.
+          # This bypasses the embedded Microsoft account lookup page that rejects some aliases.
+          settings = Path('xbox-game-engine/src/store/settingStore.ts')
+          st = settings.read_text()
+          old = '  use_msal_login: false,'
+          if old not in st:
+              raise SystemExit('use_msal_login default not found')
+          st = st.replace(old, '  use_msal_login: true,', 1)
+          settings.write_text(st)
+
+          # Also force the setting on startup so stale local settings cannot send the user
+          # back to the broken embedded XAL sign-in screen.
+          home = Path('xbox-game-engine/src/pages/Home.tsx')
+          hs = home.read_text()
+          old_home = "    const _settings = getSettings();\n"
+          new_home = "    const _settings = getSettings();\n    _settings.use_msal_login = true;\n    saveSettings(_settings);\n"
+          if old_home not in hs:
+              raise SystemExit('Home settings initialization not found')
+          hs = hs.replace(old_home, new_home, 1)
+          home.write_text(hs)
+
           assets = Path('xbox-game-engine/android/app/src/main/assets')
           assets.mkdir(parents=True, exist_ok=True)
           lic = Path('xbox-game-engine/LICENSE').read_text()
           (assets/'XStreaming-MIT-LICENSE.txt').write_text(lic)
+
           bad_patch = Path('xbox-game-engine/patches/react-native-paper+5.12.5.patch')
           if bad_patch.exists():
               bad_patch.unlink()
@@ -89,13 +116,13 @@ jobs:
           APK=$(find xbox-game-engine/android/app/build/outputs/apk -type f -name '*.apk' | head -n 1)
           test -n "$APK"
           echo "Built APK: $APK"
-          cp "$APK" Xbox-Controle-Game-v2.0.0.apk
-          ls -lh Xbox-Controle-Game-v2.0.0.apk
-          sha256sum Xbox-Controle-Game-v2.0.0.apk
+          cp "$APK" Xbox-Controle-Game-v2.0.1.apk
+          ls -lh Xbox-Controle-Game-v2.0.1.apk
+          sha256sum Xbox-Controle-Game-v2.0.1.apk
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: Xbox-Controle-Game-v2.0.0
-          path: Xbox-Controle-Game-v2.0.0.apk
+          name: Xbox-Controle-Game-v2.0.1
+          path: Xbox-Controle-Game-v2.0.1.apk
           if-no-files-found: error
