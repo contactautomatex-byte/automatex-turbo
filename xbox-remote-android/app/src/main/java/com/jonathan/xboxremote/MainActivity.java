@@ -1,8 +1,11 @@
 package com.jonathan.xboxremote;
 
+import android.Manifest;
 import android.app.Activity;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
@@ -23,6 +26,8 @@ public class MainActivity extends Activity implements SmartGlassClient.Listener 
     private EditText ipField;
     private Button connectButton;
     private final List<Button> remoteButtons = new ArrayList<>();
+    private static final int REQ_NEARBY_WIFI = 2001;
+    private String pendingIp = "";
 
     private static final int BG = Color.rgb(11, 15, 20);
     private static final int PANEL = Color.rgb(27, 33, 41);
@@ -60,7 +65,7 @@ public class MainActivity extends Activity implements SmartGlassClient.Listener 
         root.addView(status, lp(-1, -2, 0, 0, 0, 14));
 
         ipField = new EditText(this);
-        ipField.setHint("IP do Xbox (opcional, ex.: 192.168.0.120)");
+        ipField.setHint("IP do Xbox (opcional, ex.: 192.168.1.14)");
         ipField.setHintTextColor(MUTED);
         ipField.setTextColor(TEXT);
         ipField.setSingleLine(true);
@@ -73,12 +78,7 @@ public class MainActivity extends Activity implements SmartGlassClient.Listener 
         connectButton.setTextColor(Color.WHITE);
         connectButton.setTextSize(15);
         connectButton.setBackground(roundRect(GREEN, 12));
-        connectButton.setOnClickListener(v -> {
-            String ip = ipField.getText().toString().trim();
-            connectButton.setEnabled(false);
-            setRemoteEnabled(false);
-            client.connect(ip);
-        });
+        connectButton.setOnClickListener(v -> beginConnect());
         root.addView(connectButton, lp(-1, dp(54), 0, 0, 0, 18));
 
         TextView hint = text("O celular e o Xbox precisam estar na mesma rede. O campo de IP pode ficar vazio: o app tenta localizar o console automaticamente.", 13, MUTED, false);
@@ -114,6 +114,35 @@ public class MainActivity extends Activity implements SmartGlassClient.Listener 
         TextView note = text("Se aparecer ‘conexões anônimas desativadas’, o próprio Xbox está bloqueando controles locais sem login. O app mostrará o motivo exato retornado pelo console.", 12, MUTED, false);
         root.addView(note);
         return scroll;
+    }
+
+    private void beginConnect() {
+        pendingIp = ipField.getText().toString().trim();
+        if (Build.VERSION.SDK_INT >= 33 && checkSelfPermission(Manifest.permission.NEARBY_WIFI_DEVICES) != PackageManager.PERMISSION_GRANTED) {
+            status.setText("Permita acesso a dispositivos Wi‑Fi próximos para controlar o Xbox.");
+            requestPermissions(new String[]{Manifest.permission.NEARBY_WIFI_DEVICES}, REQ_NEARBY_WIFI);
+            return;
+        }
+        connectNow(pendingIp);
+    }
+
+    private void connectNow(String ip) {
+        connectButton.setEnabled(false);
+        setRemoteEnabled(false);
+        client.connect(ip);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == REQ_NEARBY_WIFI) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                connectNow(pendingIp);
+            } else {
+                status.setText("Sem a permissão de dispositivos Wi‑Fi próximos, o Android pode bloquear o envio de comandos ao Xbox.");
+                connectButton.setEnabled(true);
+            }
+        }
     }
 
     private Button remote(String label, int mask) {
@@ -164,6 +193,7 @@ public class MainActivity extends Activity implements SmartGlassClient.Listener 
 
     @Override public void onConnected(String consoleName, String ip) {
         runOnUiThread(() -> {
+            ipField.setText(ip);
             status.setText("Conectado: " + consoleName + "  •  " + ip);
             connectButton.setText("RECONECTAR");
             connectButton.setEnabled(true);
