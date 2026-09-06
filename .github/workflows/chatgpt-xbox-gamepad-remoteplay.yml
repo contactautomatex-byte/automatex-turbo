@@ -45,7 +45,7 @@ jobs:
           cd xbox-game-engine
           git checkout 9d7649d477b71a674ab72842e950e977e60baedb
 
-      - name: Rebrand and keep MIT notice
+      - name: Rebrand and prepare Android build
         run: |
           python3 - <<'PY'
           from pathlib import Path
@@ -60,6 +60,11 @@ jobs:
           assets.mkdir(parents=True, exist_ok=True)
           lic = Path('xbox-game-engine/LICENSE').read_text()
           (assets/'XStreaming-MIT-LICENSE.txt').write_text(lic)
+          # Upstream contains a malformed cosmetic patch for react-native-paper.
+          # It only changes segmented-button padding and is unrelated to Remote Play/gamepad input.
+          bad_patch = Path('xbox-game-engine/patches/react-native-paper+5.12.5.patch')
+          if bad_patch.exists():
+              bad_patch.unlink()
           PY
 
       - name: Install JS dependencies
@@ -76,9 +81,14 @@ jobs:
           chmod +x gradlew
           ./gradlew --no-daemon assembleDevRelease -PreactNativeArchitectures=arm64-v8a
 
-      - name: Collect APK
+      - name: Locate and collect APK
         run: |
-          cp xbox-game-engine/android/app/build/outputs/apk/dev/release/app-dev-release.apk Xbox-Controle-Game-v2.0.0.apk
+          APK=$(find xbox-game-engine/android/app/build/outputs/apk -type f -name '*.apk' | head -n 1)
+          test -n "$APK"
+          echo "Built APK: $APK"
+          cp "$APK" Xbox-Controle-Game-v2.0.0.apk
+          ls -lh Xbox-Controle-Game-v2.0.0.apk
+          sha256sum Xbox-Controle-Game-v2.0.0.apk
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
