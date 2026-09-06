@@ -45,19 +45,18 @@ jobs:
           cd xbox-game-engine
           git checkout 9d7649d477b71a674ab72842e950e977e60baedb
 
-      - name: Rebrand and force device-code login
+      - name: Build controller-only edition
         run: |
           python3 - <<'PY'
           from pathlib import Path
 
-          # App name
+          # App identity
           p = Path('xbox-game-engine/android/app/src/main/res/values/strings.xml')
-          p.write_text(p.read_text().replace('>XStreaming<','>Xbox Controle Game<'))
+          p.write_text(p.read_text().replace('>XStreaming<','>Xbox Controle<'))
 
-          # New package id avoids Android signature conflict with v2.0.0
           g = Path('xbox-game-engine/android/app/build.gradle')
           s = g.read_text()
-          s = s.replace('applicationId "com.dev.xstreaming"','applicationId "com.jonathan.xboxcontrole.game201"')
+          s = s.replace('applicationId "com.dev.xstreaming"','applicationId "com.jonathan.xboxcontrole.controller210"')
           s = s.replace('signingConfig signingConfigs.release','signingConfig signingConfigs.debug')
           needle = 'return "darwin-x86_64"'
           replacement = 'return System.getProperty("os.name").toLowerCase().contains("linux") ? "linux-x86_64" : "darwin-x86_64"'
@@ -66,26 +65,79 @@ jobs:
           s = s.replace(needle, replacement, 1)
           g.write_text(s)
 
-          # Force MSAL/device-code authentication by default.
-          # This bypasses the embedded Microsoft account lookup page that rejects some aliases.
+          # Controller-oriented defaults: device-code login, visible touch gamepad,
+          # opaque controls, free/floating sticks, no direct touch-to-video mode.
           settings = Path('xbox-game-engine/src/store/settingStore.ts')
           st = settings.read_text()
-          old = '  use_msal_login: false,'
-          if old not in st:
-              raise SystemExit('use_msal_login default not found')
-          st = st.replace(old, '  use_msal_login: true,', 1)
+          replacements = {
+              '  use_msal_login: false,': '  use_msal_login: true,',
+              '  show_virtual_gamead: false,': '  show_virtual_gamead: true,',
+              '  virtual_gamepad_opacity: 0.7,': '  virtual_gamepad_opacity: 1.0,',
+              '  virtual_gamepad_joystick: 1,': '  virtual_gamepad_joystick: 1,',
+              '  native_touch: false,': '  native_touch: false,',
+              '  show_menu: false,': '  show_menu: true,',
+          }
+          for old, new in replacements.items():
+              if old not in st:
+                  raise SystemExit(f'setting not found: {old}')
+              st = st.replace(old, new, 1)
           settings.write_text(st)
 
-          # Also force the setting on startup so stale local settings cannot send the user
-          # back to the broken embedded XAL sign-in screen.
+          # Force controller settings on every launch so old saved preferences cannot
+          # hide the gamepad or send the user back to XAL embedded sign-in.
           home = Path('xbox-game-engine/src/pages/Home.tsx')
           hs = home.read_text()
           old_home = "    const _settings = getSettings();\n"
-          new_home = "    const _settings = getSettings();\n    _settings.use_msal_login = true;\n    saveSettings(_settings);\n"
+          new_home = (
+              "    const _settings = getSettings();\n"
+              "    _settings.use_msal_login = true;\n"
+              "    _settings.show_virtual_gamead = true;\n"
+              "    _settings.virtual_gamepad_opacity = 1.0;\n"
+              "    _settings.virtual_gamepad_joystick = 1;\n"
+              "    _settings.native_touch = false;\n"
+              "    _settings.show_menu = true;\n"
+              "    saveSettings(_settings);\n"
+          )
           if old_home not in hs:
               raise SystemExit('Home settings initialization not found')
           hs = hs.replace(old_home, new_home, 1)
           home.write_text(hs)
+
+          # Portuguese labels reflect the actual purpose of this edition.
+          pt = Path('xbox-game-engine/src/languages/pt.ts')
+          pts = pt.read_text()
+          pts = pts.replace("'Start stream': 'Iniciar streaming'", "'Start stream': 'Usar como controle'")
+          pts = pts.replace("'Power on and start stream': 'Ligar e iniciar streaming'", "'Power on and start stream': 'Ligar e usar como controle'")
+          pt.write_text(pts)
+
+          # Controller-only presentation:
+          # Keep the Remote Play/WebRTC session alive because that is what makes games
+          # accept the phone as gamepad input, but do not render the Xbox video on the phone.
+          native = Path('xbox-game-engine/src/pages/NativeStream.tsx')
+          ns = native.read_text()
+
+          # Always expose the touch controller once the Remote Play transport is connected.
+          old_show = "          if (portraitMode || _settings.show_virtual_gamead) {\n            setShowVirtualGamepad(true);\n          }"
+          new_show = "          if (!portraitMode) {\n            setShowVirtualGamepad(true);\n          }"
+          if old_show not in ns:
+              raise SystemExit('virtual gamepad connected block not found')
+          ns = ns.replace(old_show, new_show, 1)
+
+          # Mute Remote Play audio on the phone; the TV remains the audiovisual output.
+          old_audio = "        if (track?.kind === 'audio') {\n          track?._setVolume?.(audioGainRef.current);\n        }"
+          new_audio = "        if (track?.kind === 'audio') {\n          track?._setVolume?.(0);\n        }"
+          if old_audio not in ns:
+              raise SystemExit('audio track block not found')
+          ns = ns.replace(old_audio, new_audio, 1)
+
+          # Do not mount RTCView/RTCFsrView in landscape. The WebRTC transport, input
+          # data channel, keepalive and frame feedback continue running underneath.
+          old_player = "      {renderStreamPlayer(styles.playerContainer, styles.player)}\n\n      {renderPerformancePanel()}"
+          new_player = "      <View style={styles.playerContainer} pointerEvents=\"none\" />\n\n      {renderPerformancePanel()}"
+          if old_player not in ns:
+              raise SystemExit('landscape player render block not found')
+          ns = ns.replace(old_player, new_player, 1)
+          native.write_text(ns)
 
           assets = Path('xbox-game-engine/android/app/src/main/assets')
           assets.mkdir(parents=True, exist_ok=True)
@@ -116,13 +168,13 @@ jobs:
           APK=$(find xbox-game-engine/android/app/build/outputs/apk -type f -name '*.apk' | head -n 1)
           test -n "$APK"
           echo "Built APK: $APK"
-          cp "$APK" Xbox-Controle-Game-v2.0.1.apk
-          ls -lh Xbox-Controle-Game-v2.0.1.apk
-          sha256sum Xbox-Controle-Game-v2.0.1.apk
+          cp "$APK" Xbox-Controle-v2.1.0.apk
+          ls -lh Xbox-Controle-v2.1.0.apk
+          sha256sum Xbox-Controle-v2.1.0.apk
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: Xbox-Controle-Game-v2.0.1
-          path: Xbox-Controle-Game-v2.0.1.apk
+          name: Xbox-Controle-v2.1.0
+          path: Xbox-Controle-v2.1.0.apk
           if-no-files-found: error
