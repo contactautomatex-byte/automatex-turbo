@@ -1,0 +1,26 @@
+name: XboxControle
+options:
+  bundleIdPrefix: com.jonathan
+  deploymentTarget:
+    iOS: "15.0"
+settings:
+  base:
+    SWIFT_VERSION: "5.0"
+    TARGETED_DEVICE_FAMILY: "1"
+    IPHONEOS_DEPLOYMENT_TARGET: "15.0"
+targets:
+  XboxControle:
+    type: application
+    platform: iOS
+    sources:
+      - path: XboxControle
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.jonathan.xboxcontrole.ios
+        PRODUCT_NAME: Xbox Controle
+        INFOPLIST_FILE: XboxControle/Info.plist
+        SWIFT_OBJC_BRIDGING_HEADER: XboxControle/XboxControle-Bridging-Header.h
+        CODE_SIGN_STYLE: Automatic
+        DEVELOPMENT_TEAM: ""
+    scheme:
+      testTargets: []
