@@ -70,69 +70,64 @@ public class MainActivity extends Activity implements SmartGlassClient.Listener 
     private View buildLandscapeGamepad() {
         FrameLayout root = new FrameLayout(this);
         root.setBackgroundColor(BG);
-        root.setPadding(dp(12), dp(10), dp(12), dp(10));
+        root.setPadding(dp(8), dp(6), dp(8), dp(6));
 
         int sw = getResources().getDisplayMetrics().widthPixels;
         int sh = getResources().getDisplayMetrics().heightPixels;
-        int shortSide = Math.min(sw, sh);
-        int face = clamp(shortSide / 7, dp(62), dp(88));
+        int topBarHeight = dp(50);
+        int availableHeight = Math.max(dp(180), sh - topBarHeight - dp(24));
+        int face = clamp((availableHeight - dp(16)) / 3, dp(48), dp(72));
         int cluster = face * 3 + dp(16);
-        int edge = clamp(shortSide / 18, dp(22), dp(42));
-        int bottom = clamp(shortSide / 16, dp(18), dp(36));
+        int edge = clamp(sw / 55, dp(14), dp(34));
+        int bottom = dp(8);
 
         LinearLayout topBar = new LinearLayout(this);
         topBar.setOrientation(LinearLayout.HORIZONTAL);
         topBar.setGravity(Gravity.CENTER_VERTICAL);
-        topBar.setPadding(dp(10), dp(7), dp(10), dp(7));
-        topBar.setBackground(roundRectStroke(PANEL, BORDER, 16, 1));
+        topBar.setPadding(dp(8), dp(5), dp(8), dp(5));
+        topBar.setBackground(roundRectStroke(PANEL, BORDER, 14, 1));
 
-        TextView logo = text("XBOX", 12, Color.WHITE, true);
+        TextView logo = text("XBOX", 11, Color.WHITE, true);
         logo.setGravity(Gravity.CENTER);
-        logo.setBackground(roundRect(GREEN, 13));
-        topBar.addView(logo, linearLp(dp(62), dp(34), 0, 0, dp(8), 0));
+        logo.setBackground(roundRect(GREEN, 12));
+        topBar.addView(logo, linearLp(dp(58), dp(32), 0, 0, dp(8), 0));
 
-        status = text("Desconectado", 13, TEXT, true);
+        status = text("Desconectado", 12, TEXT, true);
         status.setSingleLine(true);
         status.setGravity(Gravity.CENTER_VERTICAL);
-        topBar.addView(status, new LinearLayout.LayoutParams(0, dp(38), 1f));
+        topBar.addView(status, new LinearLayout.LayoutParams(0, dp(34), 1f));
 
         Button view = smallRemote("VIEW", SmartGlassClient.BTN_VIEW);
         Button home = smallRemote("⌂", SmartGlassClient.BTN_NEXUS);
-        home.setTextSize(21);
+        home.setTextSize(20);
         Button menu = smallRemote("MENU", SmartGlassClient.BTN_MENU);
-        topBar.addView(view, linearLp(dp(66), dp(38), dp(4), 0, dp(4), 0));
-        topBar.addView(home, linearLp(dp(48), dp(40), 0, 0, dp(4), 0));
-        topBar.addView(menu, linearLp(dp(66), dp(38), 0, 0, dp(6), 0));
+        topBar.addView(view, linearLp(dp(58), dp(34), dp(4), 0, dp(4), 0));
+        topBar.addView(home, linearLp(dp(44), dp(36), 0, 0, dp(4), 0));
+        topBar.addView(menu, linearLp(dp(58), dp(34), 0, 0, dp(6), 0));
 
         connectButton = new Button(this);
-        connectButton.setText("CONECTAR");
+        connectButton.setText("Conectar");
         connectButton.setAllCaps(false);
         connectButton.setTextColor(Color.WHITE);
-        connectButton.setTextSize(11);
+        connectButton.setTextSize(10);
         connectButton.setTypeface(Typeface.DEFAULT, Typeface.BOLD);
-        connectButton.setPadding(dp(8), 0, dp(8), 0);
+        connectButton.setPadding(dp(7), 0, dp(7), 0);
         connectButton.setMinWidth(0);
         connectButton.setMinHeight(0);
-        connectButton.setBackground(rippleRound(GREEN, 12));
+        connectButton.setBackground(rippleRound(GREEN, 11));
         connectButton.setOnClickListener(v -> beginConnect());
-        topBar.addView(connectButton, linearLp(dp(92), dp(38), 0, 0, 0, 0));
+        topBar.addView(connectButton, linearLp(dp(84), dp(34), 0, 0, 0, 0));
 
-        FrameLayout.LayoutParams topParams = new FrameLayout.LayoutParams(-1, dp(54), Gravity.TOP | Gravity.CENTER_HORIZONTAL);
-        topParams.leftMargin = dp(10);
-        topParams.rightMargin = dp(10);
+        FrameLayout.LayoutParams topParams = new FrameLayout.LayoutParams(-1, topBarHeight, Gravity.TOP | Gravity.CENTER_HORIZONTAL);
+        topParams.leftMargin = dp(8);
+        topParams.rightMargin = dp(8);
         root.addView(topBar, topParams);
 
+        // Mantido fora da área de jogo: a descoberta automática encontra o Xbox.
+        // Quando uma conexão é feita, o IP é salvo neste campo invisível para reconectar rapidamente.
         ipField = new EditText(this);
-        ipField.setHint("IP opcional");
-        ipField.setHintTextColor(MUTED);
-        ipField.setTextColor(TEXT);
-        ipField.setTextSize(12);
         ipField.setSingleLine(true);
-        ipField.setPadding(dp(10), 0, dp(10), 0);
-        ipField.setBackground(roundRectStroke(PANEL_2, BORDER, 10, 1));
-        FrameLayout.LayoutParams ipParams = new FrameLayout.LayoutParams(dp(140), dp(38), Gravity.TOP | Gravity.CENTER_HORIZONTAL);
-        ipParams.topMargin = dp(62);
-        root.addView(ipField, ipParams);
+        ipField.setVisibility(View.GONE);
 
         View dpad = buildDpad(face);
         FrameLayout.LayoutParams dpadParams = new FrameLayout.LayoutParams(cluster, cluster, Gravity.LEFT | Gravity.BOTTOM);
@@ -146,29 +141,14 @@ public class MainActivity extends Activity implements SmartGlassClient.Listener 
         abxyParams.bottomMargin = bottom;
         root.addView(abxy, abxyParams);
 
-        TextView leftLabel = text("D-PAD", 10, MUTED, true);
-        leftLabel.setGravity(Gravity.CENTER);
-        FrameLayout.LayoutParams ll = new FrameLayout.LayoutParams(cluster, dp(24), Gravity.LEFT | Gravity.BOTTOM);
-        ll.leftMargin = edge;
-        ll.bottomMargin = bottom + cluster;
-        root.addView(leftLabel, ll);
-
-        TextView rightLabel = text("A  B  X  Y", 10, MUTED, true);
-        rightLabel.setGravity(Gravity.CENTER);
-        FrameLayout.LayoutParams rl = new FrameLayout.LayoutParams(cluster, dp(24), Gravity.RIGHT | Gravity.BOTTOM);
-        rl.rightMargin = edge;
-        rl.bottomMargin = bottom + cluster;
-        root.addView(rightLabel, rl);
-
         return root;
     }
 
     private View buildDpad(int size) {
         FrameLayout box = clusterBox();
         int b = size;
-        int c = size;
         int total = b * 3 + dp(16);
-        int center = (total - c) / 2;
+        int center = (total - b) / 2;
 
         addAt(box, dpadButton("▲", SmartGlassClient.BTN_UP), center, dp(4), b, b);
         addAt(box, dpadButton("◀", SmartGlassClient.BTN_LEFT), dp(4), center, b, b);
@@ -177,7 +157,7 @@ public class MainActivity extends Activity implements SmartGlassClient.Listener 
 
         View middle = new View(this);
         middle.setBackground(roundRect(Color.rgb(49, 57, 67), 16));
-        addAt(box, middle, center, center, c, c);
+        addAt(box, middle, center, center, b, b);
         return box;
     }
 
@@ -196,7 +176,7 @@ public class MainActivity extends Activity implements SmartGlassClient.Listener 
 
     private FrameLayout clusterBox() {
         FrameLayout box = new FrameLayout(this);
-        box.setBackground(roundRectStroke(Color.rgb(13, 18, 24), BORDER, 28, 1));
+        box.setBackground(roundRectStroke(Color.rgb(13, 18, 24), BORDER, 26, 1));
         return box;
     }
 
@@ -209,7 +189,7 @@ public class MainActivity extends Activity implements SmartGlassClient.Listener 
 
     private Button dpadButton(String label, int mask) {
         Button b = remoteBase(label, mask);
-        b.setTextSize(24);
+        b.setTextSize(23);
         b.setBackground(rippleRound(Color.rgb(47, 55, 65), 18));
         return b;
     }
@@ -217,7 +197,7 @@ public class MainActivity extends Activity implements SmartGlassClient.Listener 
     private Button faceButton(String label, int mask, int color, int textColor) {
         Button b = remoteBase(label, mask);
         b.setTextColor(textColor);
-        b.setTextSize(25);
+        b.setTextSize(24);
         b.setTypeface(Typeface.DEFAULT, Typeface.BOLD);
         b.setBackground(rippleRound(color, 100));
         return b;
@@ -225,8 +205,8 @@ public class MainActivity extends Activity implements SmartGlassClient.Listener 
 
     private Button smallRemote(String label, int mask) {
         Button b = remoteBase(label, mask);
-        b.setTextSize(label.length() > 2 ? 10 : 18);
-        b.setBackground(rippleRound(PANEL_2, 12));
+        b.setTextSize(label.length() > 2 ? 9 : 18);
+        b.setBackground(rippleRound(PANEL_2, 11));
         return b;
     }
 
@@ -254,6 +234,7 @@ public class MainActivity extends Activity implements SmartGlassClient.Listener 
     private void beginConnect() {
         pendingIp = ipField.getText().toString().trim();
         if (Build.VERSION.SDK_INT >= 33 && checkSelfPermission(Manifest.permission.NEARBY_WIFI_DEVICES) != PackageManager.PERMISSION_GRANTED) {
+            status.setTextColor(TEXT);
             status.setText("Permita acesso ao Wi‑Fi");
             requestPermissions(new String[]{Manifest.permission.NEARBY_WIFI_DEVICES}, REQ_NEARBY_WIFI);
             return;
@@ -264,6 +245,7 @@ public class MainActivity extends Activity implements SmartGlassClient.Listener 
     private void connectNow(String ip) {
         connectButton.setEnabled(false);
         setRemoteEnabled(false);
+        status.setTextColor(TEXT);
         status.setText("Procurando Xbox…");
         client.connect(ip);
     }
@@ -275,6 +257,7 @@ public class MainActivity extends Activity implements SmartGlassClient.Listener 
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 connectNow(pendingIp);
             } else {
+                status.setTextColor(RED);
                 status.setText("Permissão de Wi‑Fi necessária");
                 connectButton.setEnabled(true);
             }
@@ -323,7 +306,7 @@ public class MainActivity extends Activity implements SmartGlassClient.Listener 
         });
     }
 
-    @Override protected void onWindowFocusChanged(boolean hasFocus) {
+    @Override public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
         if (hasFocus) enableImmersive();
     }
