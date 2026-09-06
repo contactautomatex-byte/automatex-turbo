@@ -1,0 +1,56 @@
+name: Build Xbox Controle iOS
+
+on:
+  push:
+    branches:
+      - chatgpt/xbox-remote-apk
+    paths:
+      - 'xbox-remote-ios/**'
+      - '.github/workflows/chatgpt-xbox-remote-ios.yml'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-latest
+    timeout-minutes: 25
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install XcodeGen
+        run: brew install xcodegen
+
+      - name: Generate Xcode project
+        working-directory: xbox-remote-ios
+        run: xcodegen generate
+
+      - name: Build unsigned iPhone app
+        working-directory: xbox-remote-ios
+        run: |
+          xcodebuild \
+            -project XboxControle.xcodeproj \
+            -scheme XboxControle \
+            -configuration Release \
+            -sdk iphoneos \
+            -derivedDataPath build \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGN_IDENTITY="" \
+            build
+
+      - name: Package unsigned IPA
+        working-directory: xbox-remote-ios
+        run: |
+          mkdir -p Payload
+          cp -R build/Build/Products/Release-iphoneos/Xbox\ Controle.app Payload/
+          zip -qry Xbox-Controle-iOS-v1.0.0-unsigned.ipa Payload
+          zip -qry Xbox-Controle-iOS-Project.zip XboxControle.xcodeproj XboxControle project.yml
+
+      - name: Upload iOS artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: Xbox-Controle-iOS-v1.0.0
+          path: |
+            xbox-remote-ios/Xbox-Controle-iOS-v1.0.0-unsigned.ipa
+            xbox-remote-ios/Xbox-Controle-iOS-Project.zip
+          if-no-files-found: error
