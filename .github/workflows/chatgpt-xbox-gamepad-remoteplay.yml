@@ -55,13 +55,32 @@ jobs:
           s = g.read_text()
           s = s.replace('applicationId "com.dev.xstreaming"','applicationId "com.jonathan.xboxcontrole.game"')
           s = s.replace('signingConfig signingConfigs.release','signingConfig signingConfigs.debug')
+          old = '''def nanoRustHostTag = { ndkDir ->
+    def armTag = file("${ndkDir}/toolchains/llvm/prebuilt/darwin-arm64")
+    if (armTag.exists()) {
+        return "darwin-arm64"
+    }
+    return "darwin-x86_64"
+}'''
+          new = '''def nanoRustHostTag = { ndkDir ->
+    def linuxTag = file("${ndkDir}/toolchains/llvm/prebuilt/linux-x86_64")
+    if (linuxTag.exists()) {
+        return "linux-x86_64"
+    }
+    def armTag = file("${ndkDir}/toolchains/llvm/prebuilt/darwin-arm64")
+    if (armTag.exists()) {
+        return "darwin-arm64"
+    }
+    return "darwin-x86_64"
+}'''
+          if old not in s:
+              raise SystemExit('nanoRustHostTag block not found; refusing an unverified build patch')
+          s = s.replace(old, new)
           g.write_text(s)
           assets = Path('xbox-game-engine/android/app/src/main/assets')
           assets.mkdir(parents=True, exist_ok=True)
           lic = Path('xbox-game-engine/LICENSE').read_text()
           (assets/'XStreaming-MIT-LICENSE.txt').write_text(lic)
-          # Upstream contains a malformed cosmetic patch for react-native-paper.
-          # It only changes segmented-button padding and is unrelated to Remote Play/gamepad input.
           bad_patch = Path('xbox-game-engine/patches/react-native-paper+5.12.5.patch')
           if bad_patch.exists():
               bad_patch.unlink()
