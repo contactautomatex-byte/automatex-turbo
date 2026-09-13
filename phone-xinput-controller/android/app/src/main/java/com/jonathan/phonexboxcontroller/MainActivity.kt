@@ -23,7 +23,6 @@ class MainActivity : Activity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        hideSystemUi()
 
         val root = FrameLayout(this)
         gamepadView = GamepadView(this)
@@ -45,6 +44,9 @@ class MainActivity : Activity() {
         root.addView(status, statusLp)
 
         setContentView(root)
+        // Android 15/16 can throw while resolving WindowInsetsController before
+        // the decor view is attached. Hide the bars only after content is mounted.
+        root.post { hideSystemUi() }
         refreshStatus()
 
         client = UdpControllerClient(
@@ -54,7 +56,7 @@ class MainActivity : Activity() {
         )
         client.start()
 
-        if (!prefs.getBoolean("configured", false)) showSettings()
+        if (!prefs.getBoolean("configured", false)) root.post { showSettings() }
     }
 
     private fun refreshStatus() {
@@ -121,18 +123,25 @@ class MainActivity : Activity() {
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
-        if (hasFocus) hideSystemUi()
+        if (hasFocus) window.decorView.post { hideSystemUi() }
     }
 
     private fun hideSystemUi() {
+        if (isFinishing || isDestroyed) return
+        val decor = window.decorView
+        if (!decor.isAttachedToWindow) {
+            decor.post { hideSystemUi() }
+            return
+        }
+
         if (android.os.Build.VERSION.SDK_INT >= 30) {
-            window.insetsController?.let {
+            decor.windowInsetsController?.let {
                 it.hide(WindowInsets.Type.statusBars() or WindowInsets.Type.navigationBars())
                 it.systemBarsBehavior = WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
             }
         } else {
             @Suppress("DEPRECATION")
-            window.decorView.systemUiVisibility = (
+            decor.systemUiVisibility = (
                 View.SYSTEM_UI_FLAG_FULLSCREEN or
                     View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or
                     View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY or
@@ -144,7 +153,7 @@ class MainActivity : Activity() {
     }
 
     override fun onDestroy() {
-        client.stop()
+        if (::client.isInitialized) client.stop()
         super.onDestroy()
     }
 }
