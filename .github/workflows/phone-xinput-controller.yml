@@ -27,12 +27,12 @@ jobs:
         run: gradle :app:assembleRelease --no-daemon
       - name: Collect APK
         run: |
-          cp phone-xinput-controller/android/app/build/outputs/apk/release/app-release.apk Xbox-Phone-Controller-v1.0.3.apk
-          sha256sum Xbox-Phone-Controller-v1.0.3.apk
+          cp phone-xinput-controller/android/app/build/outputs/apk/release/app-release.apk Xbox-Phone-Controller-v1.0.4.apk
+          sha256sum Xbox-Phone-Controller-v1.0.4.apk
       - uses: actions/upload-artifact@v4
         with:
-          name: Xbox-Phone-Controller-Android-v1.0.3
-          path: Xbox-Phone-Controller-v1.0.3.apk
+          name: Xbox-Phone-Controller-Android-v1.0.4
+          path: Xbox-Phone-Controller-v1.0.4.apk
 
   windows:
     runs-on: windows-latest
