@@ -46,7 +46,6 @@ using (client)
 
     using var udp = new UdpClient(Port);
     udp.Client.ReceiveBufferSize = 1 << 20;
-    var lastPacket = DateTime.UtcNow;
     IPEndPoint? lastRemote = null;
 
     while (true)
@@ -54,7 +53,6 @@ using (client)
         try
         {
             var result = await udp.ReceiveAsync();
-            lastPacket = DateTime.UtcNow;
             if (lastRemote == null || !lastRemote.Address.Equals(result.RemoteEndPoint.Address))
             {
                 lastRemote = result.RemoteEndPoint;
@@ -62,7 +60,7 @@ using (client)
             }
 
             var json = Encoding.UTF8.GetString(result.Buffer);
-            var s = JsonSerializer.Deserialize<GamepadState>(json, JsonOptions);
+            var s = JsonSerializer.Deserialize<GamepadState>(json);
             if (s == null) continue;
 
             controller.SetAxisValue(Xbox360Axis.LeftThumbX, ToAxis(s.lx));
@@ -102,11 +100,6 @@ using (client)
         }
     }
 }
-
-static readonly JsonSerializerOptions JsonOptions = new()
-{
-    PropertyNameCaseInsensitive = true,
-};
 
 static void Set(Nefarius.ViGEm.Client.Targets.IXbox360Controller c, Xbox360Button button, bool value)
     => c.SetButtonState(button, value);
