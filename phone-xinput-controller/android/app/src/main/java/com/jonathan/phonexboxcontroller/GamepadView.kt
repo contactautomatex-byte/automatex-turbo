@@ -71,19 +71,19 @@ class GamepadView(context: Context) : View(context) {
         canvas.drawRect(0f, 0f, w, h, background)
         drawControllerShell(canvas, w, h)
 
-        // Xbox-like asymmetry, lowered for a rectangular phone in landscape.
-        // Left stick remains above the D-pad, right stick below ABXY, but both sit
-        // where the thumbs naturally rest while holding a phone by its edges.
-        leftCx = w * 0.205f
-        leftCy = h * 0.50f
-        rightCx = w * 0.655f
-        rightCy = h * 0.70f
-        stickRadius = m * 0.115f
+        // Phone-first ergonomics while preserving the Xbox layout relationship.
+        // These positions match where both thumbs naturally fall while gripping
+        // a rectangular phone in landscape with the hands near the lower corners.
+        leftCx = w * 0.280f
+        leftCy = h * 0.600f
+        rightCx = w * 0.740f
+        rightCy = h * 0.760f
+        stickRadius = m * 0.112f
 
         drawStick(canvas, leftCx, leftCy, stickRadius, state.lx, -state.ly)
         drawStick(canvas, rightCx, rightCy, stickRadius, state.rx, -state.ry)
 
-        drawDpad(canvas, w * 0.335f, h * 0.76f, m * 0.070f)
+        drawDpad(canvas, w * 0.390f, h * 0.795f, m * 0.067f)
         drawFaceButtons(canvas, w, h, m)
         drawCenterButtons(canvas, w, h, m)
         drawShoulders(canvas, w, h)
@@ -159,8 +159,8 @@ class GamepadView(context: Context) : View(context) {
 
     private fun drawFaceButtons(canvas: Canvas, w: Float, h: Float, m: Float) {
         val r = m * 0.052f
-        val fx = w * 0.82f
-        val fy = h * 0.46f
+        val fx = w * 0.835f
+        val fy = h * 0.455f
         val gap = r * 1.55f
         val buttons = listOf(
             CircleButton("y", fx, fy - gap, r, "Y"),
@@ -197,9 +197,9 @@ class GamepadView(context: Context) : View(context) {
         val smallR = m * 0.031f
         val guideR = m * 0.050f
 
-        drawCenterButton(canvas, CircleButton("view", w * 0.445f, h * 0.46f, smallR, "▣"), false)
-        drawCenterButton(canvas, CircleButton("menu", w * 0.555f, h * 0.46f, smallR, "≡"), false)
-        drawCenterButton(canvas, CircleButton("guide", w * 0.500f, h * 0.33f, guideR, "X"), true)
+        drawCenterButton(canvas, CircleButton("view", w * 0.445f, h * 0.455f, smallR, "▣"), false)
+        drawCenterButton(canvas, CircleButton("menu", w * 0.555f, h * 0.455f, smallR, "≡"), false)
+        drawCenterButton(canvas, CircleButton("guide", w * 0.500f, h * 0.325f, guideR, "X"), true)
     }
 
     private fun drawCenterButton(canvas: Canvas, b: CircleButton, guide: Boolean) {
@@ -295,17 +295,17 @@ class GamepadView(context: Context) : View(context) {
         }
 
         val r = m * 0.052f
-        val fx = w * 0.82f
-        val fy = h * 0.46f
+        val fx = w * 0.835f
+        val fy = h * 0.455f
         val gap = r * 1.55f
         val circles = listOf(
             CircleButton("y", fx, fy - gap, r, "Y"),
             CircleButton("a", fx, fy + gap, r, "A"),
             CircleButton("x", fx - gap, fy, r, "X"),
             CircleButton("b", fx + gap, fy, r, "B"),
-            CircleButton("view", w * 0.445f, h * 0.46f, m * 0.031f, "▣"),
-            CircleButton("guide", w * 0.500f, h * 0.33f, m * 0.050f, "X"),
-            CircleButton("menu", w * 0.555f, h * 0.46f, m * 0.031f, "≡"),
+            CircleButton("view", w * 0.445f, h * 0.455f, m * 0.031f, "▣"),
+            CircleButton("guide", w * 0.500f, h * 0.325f, m * 0.050f, "X"),
+            CircleButton("menu", w * 0.555f, h * 0.455f, m * 0.031f, "≡"),
         )
         circles.firstOrNull { hypot(x - it.x, y - it.y) <= it.r * 1.50f }?.let {
             pointerKeys[id] = it.key
@@ -331,9 +331,9 @@ class GamepadView(context: Context) : View(context) {
             return
         }
 
-        val dcx = w * 0.335f
-        val dcy = h * 0.76f
-        val s = m * 0.070f
+        val dcx = w * 0.390f
+        val dcy = h * 0.795f
+        val s = m * 0.067f
         val arm = s * 0.76f
         val length = s * 1.88f
         val dpad = listOf(
