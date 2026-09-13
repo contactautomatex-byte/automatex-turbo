@@ -25,9 +25,11 @@ class MainActivity : Activity() {
         super.onCreate(savedInstanceState)
 
         val root = FrameLayout(this)
-        gamepadView = GamepadView(this)
-        gamepadView.sensitivity = prefs.getFloat("sensitivity", 1.0f)
-        gamepadView.deadzone = prefs.getFloat("deadzone", 0.08f)
+        gamepadView = GamepadView(this).apply {
+            moveSensitivity = prefs.getFloat("move_sensitivity", 1.0f)
+            aimSensitivity = prefs.getFloat("aim_sensitivity", 0.78f)
+            moveDeadzone = prefs.getFloat("move_deadzone", 0.10f)
+        }
         root.addView(gamepadView, FrameLayout.LayoutParams(-1, -1))
 
         status = TextView(this).apply {
@@ -44,8 +46,6 @@ class MainActivity : Activity() {
         root.addView(status, statusLp)
 
         setContentView(root)
-        // Android 15/16 can throw while resolving WindowInsetsController before
-        // the decor view is attached. Hide the bars only after content is mounted.
         root.post { hideSystemUi() }
         refreshStatus()
 
@@ -66,6 +66,8 @@ class MainActivity : Activity() {
     }
 
     private fun showSettings() {
+        gamepadView.resetAllInputs()
+
         val content = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
             setPadding(40, 10, 40, 0)
@@ -80,50 +82,88 @@ class MainActivity : Activity() {
             setText(prefs.getInt("port", 45990).toString())
             inputType = android.text.InputType.TYPE_CLASS_NUMBER
         }
-        val sensLabel = TextView(this).apply { text = "Sensibilidade dos analógicos" }
-        val sens = SeekBar(this).apply {
-            max = 100
-            progress = (((prefs.getFloat("sensitivity",1f)-0.5f)/1.0f)*100f).toInt().coerceIn(0,100)
+
+        val moveLabel = TextView(this).apply {
+            text = "Sensibilidade de movimento"
+            setPadding(0, 18, 0, 0)
         }
-        val dzLabel = TextView(this).apply { text = "Zona morta" }
+        val move = SeekBar(this).apply {
+            max = 80
+            progress = (((prefs.getFloat("move_sensitivity", 1.0f) - 0.60f) / 0.80f) * 80f).toInt().coerceIn(0, 80)
+        }
+
+        val aimLabel = TextView(this).apply {
+            text = "Sensibilidade da mira"
+            setPadding(0, 18, 0, 0)
+        }
+        val aim = SeekBar(this).apply {
+            max = 115
+            progress = (((prefs.getFloat("aim_sensitivity", 0.78f) - 0.35f) / 1.15f) * 115f).toInt().coerceIn(0, 115)
+        }
+
+        val dzLabel = TextView(this).apply {
+            text = "Zona morta do movimento"
+            setPadding(0, 18, 0, 0)
+        }
         val dz = SeekBar(this).apply {
-            max = 25
-            progress = (prefs.getFloat("deadzone",0.08f)*100f).toInt().coerceIn(0,25)
+            max = 22
+            progress = (prefs.getFloat("move_deadzone", 0.10f) * 100f).toInt().coerceIn(3, 22)
         }
+
+        val hint = TextView(this).apply {
+            text = "Esquerda: joystick flutuante. Direita: arraste para mirar; tocar sem arrastar não move a câmera."
+            setTextColor(Color.DKGRAY)
+            setPadding(0, 22, 0, 0)
+        }
+
         content.addView(hostInput)
         content.addView(portInput)
-        content.addView(sensLabel)
-        content.addView(sens)
+        content.addView(moveLabel)
+        content.addView(move)
+        content.addView(aimLabel)
+        content.addView(aim)
         content.addView(dzLabel)
         content.addView(dz)
+        content.addView(hint)
 
         AlertDialog.Builder(this)
-            .setTitle("Conexão com o PC")
-            .setMessage("Recomendado: USB com Ancoragem USB ativada. Também funciona pela mesma rede Wi‑Fi.")
+            .setTitle("Xbox Phone Controller")
+            .setMessage("USB com Ancoragem USB oferece a menor latência. Wi‑Fi também funciona.")
             .setView(content)
             .setPositiveButton("SALVAR") { _, _ ->
                 val host = hostInput.text.toString().trim().ifBlank { "192.168.137.1" }
-                val port = portInput.text.toString().toIntOrNull()?.coerceIn(1,65535) ?: 45990
-                val sensitivity = 0.5f + sens.progress/100f
-                val deadzone = dz.progress/100f
+                val port = portInput.text.toString().toIntOrNull()?.coerceIn(1, 65535) ?: 45990
+                val moveSensitivity = 0.60f + (move.progress / 80f) * 0.80f
+                val aimSensitivity = 0.35f + (aim.progress / 115f) * 1.15f
+                val deadzone = (dz.progress.coerceAtLeast(3)) / 100f
+
                 prefs.edit()
                     .putString("host", host)
                     .putInt("port", port)
-                    .putFloat("sensitivity", sensitivity)
-                    .putFloat("deadzone", deadzone)
+                    .putFloat("move_sensitivity", moveSensitivity)
+                    .putFloat("aim_sensitivity", aimSensitivity)
+                    .putFloat("move_deadzone", deadzone)
                     .putBoolean("configured", true)
                     .apply()
-                gamepadView.sensitivity = sensitivity
-                gamepadView.deadzone = deadzone
+
+                gamepadView.moveSensitivity = moveSensitivity
+                gamepadView.aimSensitivity = aimSensitivity
+                gamepadView.moveDeadzone = deadzone
                 refreshStatus()
             }
             .setNegativeButton("CANCELAR", null)
             .show()
     }
 
+    override fun onPause() {
+        if (::gamepadView.isInitialized) gamepadView.resetAllInputs()
+        super.onPause()
+    }
+
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
         if (hasFocus) window.decorView.post { hideSystemUi() }
+        else if (::gamepadView.isInitialized) gamepadView.resetAllInputs()
     }
 
     private fun hideSystemUi() {
@@ -153,6 +193,7 @@ class MainActivity : Activity() {
     }
 
     override fun onDestroy() {
+        if (::gamepadView.isInitialized) gamepadView.resetAllInputs()
         if (::client.isInitialized) client.stop()
         super.onDestroy()
     }
