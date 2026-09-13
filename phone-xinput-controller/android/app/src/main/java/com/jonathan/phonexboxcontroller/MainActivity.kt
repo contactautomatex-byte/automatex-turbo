@@ -30,8 +30,8 @@ class MainActivity : Activity() {
         val root = FrameLayout(this)
         gamepadView = GamepadView(this).apply {
             moveSensitivity = prefs.getFloat("move_sensitivity", 1.0f)
-            aimSensitivity = prefs.getFloat("aim_sensitivity", 0.78f)
-            moveDeadzone = prefs.getFloat("move_deadzone", 0.10f)
+            aimSensitivity = prefs.getFloat("aim_sensitivity", 0.90f)
+            moveDeadzone = prefs.getFloat("move_deadzone", 0.08f)
         }
         root.addView(gamepadView, FrameLayout.LayoutParams(-1, -1))
 
@@ -97,7 +97,7 @@ class MainActivity : Activity() {
         }
 
         val moveLabel = TextView(this).apply {
-            text = "Sensibilidade de movimento"
+            text = "Sensibilidade do analógico esquerdo"
             setPadding(0, 10, 0, 0)
         }
         val move = SeekBar(this).apply {
@@ -106,25 +106,25 @@ class MainActivity : Activity() {
         }
 
         val aimLabel = TextView(this).apply {
-            text = "Sensibilidade da mira"
+            text = "Sensibilidade do analógico direito"
             setPadding(0, 10, 0, 0)
         }
         val aim = SeekBar(this).apply {
-            max = 115
-            progress = (((prefs.getFloat("aim_sensitivity", 0.78f) - 0.35f) / 1.15f) * 115f).toInt().coerceIn(0, 115)
+            max = 110
+            progress = (((prefs.getFloat("aim_sensitivity", 0.90f) - 0.45f) / 1.10f) * 110f).toInt().coerceIn(0, 110)
         }
 
         val dzLabel = TextView(this).apply {
-            text = "Zona morta do movimento"
+            text = "Zona morta do toque"
             setPadding(0, 10, 0, 0)
         }
         val dz = SeekBar(this).apply {
-            max = 22
-            progress = (prefs.getFloat("move_deadzone", 0.10f) * 100f).toInt().coerceIn(3, 22)
+            max = 18
+            progress = (prefs.getFloat("move_deadzone", 0.08f) * 100f).toInt().coerceIn(3, 18)
         }
 
         val hint = TextView(this).apply {
-            text = "Esquerda: joystick flutuante. Direita: arraste para mirar; tocar sem arrastar não move a câmera."
+            text = "Os dois analógicos são joysticks virtuais reais: toque cria o centro, arraste e SEGURE para manter a direção; ao soltar, volta imediatamente ao centro."
             setTextColor(Color.DKGRAY)
             textSize = 13f
             setPadding(0, 12, 0, 4)
@@ -141,9 +141,6 @@ class MainActivity : Activity() {
         content.addView(dz)
         content.addView(hint)
 
-        // In landscape the previous dialog could grow taller than the screen and
-        // push SALVAR/CANCELAR below the visible area. Keep only the settings body
-        // scrollable so the action buttons always remain visible.
         val scroll = ScrollView(this).apply {
             isFillViewport = false
             addView(
@@ -167,7 +164,7 @@ class MainActivity : Activity() {
                 val host = hostInput.text.toString().trim().ifBlank { "192.168.137.1" }
                 val port = portInput.text.toString().toIntOrNull()?.coerceIn(1, 65535) ?: 45990
                 val moveSensitivity = 0.60f + (move.progress / 80f) * 0.80f
-                val aimSensitivity = 0.35f + (aim.progress / 115f) * 1.15f
+                val aimSensitivity = 0.45f + (aim.progress / 110f) * 1.10f
                 val deadzone = (dz.progress.coerceAtLeast(3)) / 100f
 
                 prefs.edit()
