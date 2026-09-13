@@ -1,0 +1,55 @@
+name: Build Phone XInput Controller
+
+on:
+  push:
+    branches:
+      - chatgpt/phone-xinput-controller
+    paths:
+      - 'phone-xinput-controller/**'
+      - '.github/workflows/phone-xinput-controller.yml'
+  workflow_dispatch:
+
+jobs:
+  android:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: android-actions/setup-android@v3
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.10.2'
+      - name: Build APK
+        working-directory: phone-xinput-controller/android
+        run: gradle :app:assembleRelease --no-daemon
+      - name: Collect APK
+        run: |
+          cp phone-xinput-controller/android/app/build/outputs/apk/release/app-release.apk Xbox-Phone-Controller-v1.0.0.apk
+          sha256sum Xbox-Phone-Controller-v1.0.0.apk
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Xbox-Phone-Controller-Android-v1.0.0
+          path: Xbox-Phone-Controller-v1.0.0.apk
+
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+      - name: Publish receiver
+        shell: pwsh
+        run: dotnet publish phone-xinput-controller/windows/PhoneXboxReceiver.csproj -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -o out
+      - name: Package receiver
+        shell: pwsh
+        run: |
+          Copy-Item phone-xinput-controller/windows/INSTALAR_PC.ps1 out/INSTALAR_PC.ps1
+          Compress-Archive -Path out/* -DestinationPath Xbox-Phone-Receiver-Windows-v1.0.0.zip -Force
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Xbox-Phone-Receiver-Windows-v1.0.0
+          path: Xbox-Phone-Receiver-Windows-v1.0.0.zip
