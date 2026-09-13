@@ -1,4 +1,3 @@
-using System.Buffers.Binary;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
@@ -86,18 +85,17 @@ using (client)
             var data = result.Buffer;
             if (IsV2(data))
             {
-                var span = data.AsSpan();
-                int seq = BinaryPrimitives.ReadInt32LittleEndian(span.Slice(6, 4));
+                int seq = BitConverter.ToInt32(data, 6);
                 if (seq <= lastV2Sequence) continue;
                 lastV2Sequence = seq;
 
-                short lx = BinaryPrimitives.ReadInt16LittleEndian(span.Slice(18, 2));
-                short ly = BinaryPrimitives.ReadInt16LittleEndian(span.Slice(20, 2));
-                short rx = BinaryPrimitives.ReadInt16LittleEndian(span.Slice(22, 2));
-                short ry = BinaryPrimitives.ReadInt16LittleEndian(span.Slice(24, 2));
-                byte lt = span[26];
-                byte rt = span[27];
-                uint buttons = BinaryPrimitives.ReadUInt32LittleEndian(span.Slice(28, 4));
+                short lx = BitConverter.ToInt16(data, 18);
+                short ly = BitConverter.ToInt16(data, 20);
+                short rx = BitConverter.ToInt16(data, 22);
+                short ry = BitConverter.ToInt16(data, 24);
+                byte lt = data[26];
+                byte rt = data[27];
+                uint buttons = BitConverter.ToUInt32(data, 28);
 
                 ApplyBinary(controller, lx, ly, rx, ry, lt, rt, buttons);
                 alreadyNeutral = lx == 0 && ly == 0 && rx == 0 && ry == 0 && lt == 0 && rt == 0 && buttons == 0;
