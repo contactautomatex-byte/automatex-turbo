@@ -8,11 +8,11 @@ android {
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.jonathan.phonexboxcontroller.v120"
+        applicationId = "com.jonathan.phonexboxcontroller.v200"
         minSdk = 28
         targetSdk = 35
-        versionCode = 9
-        versionName = "1.2.0"
+        versionCode = 10
+        versionName = "2.0.0"
     }
 
     buildTypes {
