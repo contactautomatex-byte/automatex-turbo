@@ -48,8 +48,9 @@ jobs:
         shell: pwsh
         run: |
           Copy-Item phone-xinput-controller/windows/INSTALAR_PC.ps1 out/INSTALAR_PC.ps1
-          Compress-Archive -Path out/* -DestinationPath Xbox-Phone-Receiver-Windows-v1.0.0.zip -Force
+          Copy-Item phone-xinput-controller/windows/INSTALAR_PC.cmd out/INSTALAR_PC.cmd
+          Compress-Archive -Path out/* -DestinationPath Xbox-Phone-Receiver-Windows-v1.0.1.zip -Force
       - uses: actions/upload-artifact@v4
         with:
-          name: Xbox-Phone-Receiver-Windows-v1.0.0
-          path: Xbox-Phone-Receiver-Windows-v1.0.0.zip
+          name: Xbox-Phone-Receiver-Windows-v1.0.1
+          path: Xbox-Phone-Receiver-Windows-v1.0.1.zip
