@@ -6,11 +6,14 @@ import android.graphics.Color
 import android.os.Bundle
 import android.view.Gravity
 import android.view.View
+import android.view.ViewGroup
 import android.view.WindowInsets
 import android.view.WindowInsetsController
+import android.view.WindowManager
 import android.widget.EditText
 import android.widget.FrameLayout
 import android.widget.LinearLayout
+import android.widget.ScrollView
 import android.widget.SeekBar
 import android.widget.TextView
 
@@ -70,22 +73,32 @@ class MainActivity : Activity() {
 
         val content = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
-            setPadding(40, 10, 40, 0)
+            setPadding(34, 6, 34, 12)
         }
+
+        val info = TextView(this).apply {
+            text = "USB com Ancoragem USB oferece a menor latência. Wi‑Fi também funciona."
+            setTextColor(Color.DKGRAY)
+            textSize = 14f
+            setPadding(0, 0, 0, 8)
+        }
+
         val hostInput = EditText(this).apply {
             hint = "IP do PC"
             setText(prefs.getString("host", "192.168.137.1"))
             inputType = android.text.InputType.TYPE_CLASS_PHONE
+            setSingleLine(true)
         }
         val portInput = EditText(this).apply {
             hint = "Porta"
             setText(prefs.getInt("port", 45990).toString())
             inputType = android.text.InputType.TYPE_CLASS_NUMBER
+            setSingleLine(true)
         }
 
         val moveLabel = TextView(this).apply {
             text = "Sensibilidade de movimento"
-            setPadding(0, 18, 0, 0)
+            setPadding(0, 10, 0, 0)
         }
         val move = SeekBar(this).apply {
             max = 80
@@ -94,7 +107,7 @@ class MainActivity : Activity() {
 
         val aimLabel = TextView(this).apply {
             text = "Sensibilidade da mira"
-            setPadding(0, 18, 0, 0)
+            setPadding(0, 10, 0, 0)
         }
         val aim = SeekBar(this).apply {
             max = 115
@@ -103,7 +116,7 @@ class MainActivity : Activity() {
 
         val dzLabel = TextView(this).apply {
             text = "Zona morta do movimento"
-            setPadding(0, 18, 0, 0)
+            setPadding(0, 10, 0, 0)
         }
         val dz = SeekBar(this).apply {
             max = 22
@@ -113,9 +126,11 @@ class MainActivity : Activity() {
         val hint = TextView(this).apply {
             text = "Esquerda: joystick flutuante. Direita: arraste para mirar; tocar sem arrastar não move a câmera."
             setTextColor(Color.DKGRAY)
-            setPadding(0, 22, 0, 0)
+            textSize = 13f
+            setPadding(0, 12, 0, 4)
         }
 
+        content.addView(info)
         content.addView(hostInput)
         content.addView(portInput)
         content.addView(moveLabel)
@@ -126,10 +141,25 @@ class MainActivity : Activity() {
         content.addView(dz)
         content.addView(hint)
 
-        AlertDialog.Builder(this)
+        // In landscape the previous dialog could grow taller than the screen and
+        // push SALVAR/CANCELAR below the visible area. Keep only the settings body
+        // scrollable so the action buttons always remain visible.
+        val scroll = ScrollView(this).apply {
+            isFillViewport = false
+            addView(content, ScrollView.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+            ))
+        }
+        val maxBodyHeight = (resources.displayMetrics.heightPixels * 0.58f).toInt()
+        scroll.layoutParams = ViewGroup.LayoutParams(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            maxBodyHeight,
+        )
+
+        val dialog = AlertDialog.Builder(this)
             .setTitle("Xbox Phone Controller")
-            .setMessage("USB com Ancoragem USB oferece a menor latência. Wi‑Fi também funciona.")
-            .setView(content)
+            .setView(scroll)
             .setPositiveButton("SALVAR") { _, _ ->
                 val host = hostInput.text.toString().trim().ifBlank { "192.168.137.1" }
                 val port = portInput.text.toString().toIntOrNull()?.coerceIn(1, 65535) ?: 45990
@@ -152,7 +182,12 @@ class MainActivity : Activity() {
                 refreshStatus()
             }
             .setNegativeButton("CANCELAR", null)
-            .show()
+            .create()
+
+        dialog.setOnShowListener {
+            dialog.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
+        }
+        dialog.show()
     }
 
     override fun onPause() {
