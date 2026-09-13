@@ -38,11 +38,6 @@ class GamepadView(context: Context) : View(context) {
         strokeWidth = 5f
         color = Color.rgb(111, 116, 126)
     }
-    private val activeRing = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        style = Paint.Style.STROKE
-        strokeWidth = 7f
-        color = Color.rgb(60, 205, 79)
-    }
     private val whiteText = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         color = Color.WHITE
         textAlign = Paint.Align.CENTER
@@ -76,16 +71,19 @@ class GamepadView(context: Context) : View(context) {
         canvas.drawRect(0f, 0f, w, h, background)
         drawControllerShell(canvas, w, h)
 
-        leftCx = w * 0.22f
-        leftCy = h * 0.38f
-        rightCx = w * 0.64f
-        rightCy = h * 0.68f
+        // Xbox-like asymmetry, lowered for a rectangular phone in landscape.
+        // Left stick remains above the D-pad, right stick below ABXY, but both sit
+        // where the thumbs naturally rest while holding a phone by its edges.
+        leftCx = w * 0.205f
+        leftCy = h * 0.50f
+        rightCx = w * 0.655f
+        rightCy = h * 0.70f
         stickRadius = m * 0.115f
 
         drawStick(canvas, leftCx, leftCy, stickRadius, state.lx, -state.ly)
         drawStick(canvas, rightCx, rightCy, stickRadius, state.rx, -state.ry)
 
-        drawDpad(canvas, w * 0.34f, h * 0.69f, m * 0.072f)
+        drawDpad(canvas, w * 0.335f, h * 0.76f, m * 0.070f)
         drawFaceButtons(canvas, w, h, m)
         drawCenterButtons(canvas, w, h, m)
         drawShoulders(canvas, w, h)
@@ -141,7 +139,6 @@ class GamepadView(context: Context) : View(context) {
     }
 
     private fun drawStick(canvas: Canvas, cx: Float, cy: Float, r: Float, vx: Float, vy: Float) {
-        // White collar, dark socket, textured-look knob.
         canvas.drawCircle(cx, cy, r * 1.08f, shell)
         ring.color = Color.rgb(183, 187, 194)
         ring.strokeWidth = 4f
@@ -162,8 +159,8 @@ class GamepadView(context: Context) : View(context) {
 
     private fun drawFaceButtons(canvas: Canvas, w: Float, h: Float, m: Float) {
         val r = m * 0.052f
-        val fx = w * 0.81f
-        val fy = h * 0.405f
+        val fx = w * 0.82f
+        val fy = h * 0.46f
         val gap = r * 1.55f
         val buttons = listOf(
             CircleButton("y", fx, fy - gap, r, "Y"),
@@ -200,9 +197,9 @@ class GamepadView(context: Context) : View(context) {
         val smallR = m * 0.031f
         val guideR = m * 0.050f
 
-        drawCenterButton(canvas, CircleButton("view", w * 0.445f, h * 0.405f, smallR, "▣"), false)
-        drawCenterButton(canvas, CircleButton("menu", w * 0.555f, h * 0.405f, smallR, "≡"), false)
-        drawCenterButton(canvas, CircleButton("guide", w * 0.500f, h * 0.285f, guideR, "X"), true)
+        drawCenterButton(canvas, CircleButton("view", w * 0.445f, h * 0.46f, smallR, "▣"), false)
+        drawCenterButton(canvas, CircleButton("menu", w * 0.555f, h * 0.46f, smallR, "≡"), false)
+        drawCenterButton(canvas, CircleButton("guide", w * 0.500f, h * 0.33f, guideR, "X"), true)
     }
 
     private fun drawCenterButton(canvas: Canvas, b: CircleButton, guide: Boolean) {
@@ -242,7 +239,6 @@ class GamepadView(context: Context) : View(context) {
         ring.strokeWidth = 3f
         canvas.drawPath(p, ring)
 
-        // Direction highlights keep the cross looking like one physical D-pad.
         if (state.up) drawDpadHighlight(canvas, RectF(cx - arm, cy - length, cx + arm, cy - arm))
         if (state.down) drawDpadHighlight(canvas, RectF(cx - arm, cy + arm, cx + arm, cy + length))
         if (state.left) drawDpadHighlight(canvas, RectF(cx - length, cy - arm, cx - arm, cy + arm))
@@ -282,14 +278,15 @@ class GamepadView(context: Context) : View(context) {
         val h = height.toFloat()
         val m = min(w, h)
 
-        if (hypot(x - leftCx, y - leftCy) <= stickRadius * 1.35f && leftStickPointer == null) {
+        // Generous invisible hit areas make the phone feel less like a flat screen.
+        if (hypot(x - leftCx, y - leftCy) <= stickRadius * 1.55f && leftStickPointer == null) {
             leftStickPointer = id
             pointerKeys[id] = "lstick"
             updatePointer(id, x, y)
             buzz()
             return
         }
-        if (hypot(x - rightCx, y - rightCy) <= stickRadius * 1.35f && rightStickPointer == null) {
+        if (hypot(x - rightCx, y - rightCy) <= stickRadius * 1.55f && rightStickPointer == null) {
             rightStickPointer = id
             pointerKeys[id] = "rstick"
             updatePointer(id, x, y)
@@ -298,19 +295,19 @@ class GamepadView(context: Context) : View(context) {
         }
 
         val r = m * 0.052f
-        val fx = w * 0.81f
-        val fy = h * 0.405f
+        val fx = w * 0.82f
+        val fy = h * 0.46f
         val gap = r * 1.55f
         val circles = listOf(
             CircleButton("y", fx, fy - gap, r, "Y"),
             CircleButton("a", fx, fy + gap, r, "A"),
             CircleButton("x", fx - gap, fy, r, "X"),
             CircleButton("b", fx + gap, fy, r, "B"),
-            CircleButton("view", w * 0.445f, h * 0.405f, m * 0.031f, "▣"),
-            CircleButton("guide", w * 0.500f, h * 0.285f, m * 0.050f, "X"),
-            CircleButton("menu", w * 0.555f, h * 0.405f, m * 0.031f, "≡"),
+            CircleButton("view", w * 0.445f, h * 0.46f, m * 0.031f, "▣"),
+            CircleButton("guide", w * 0.500f, h * 0.33f, m * 0.050f, "X"),
+            CircleButton("menu", w * 0.555f, h * 0.46f, m * 0.031f, "≡"),
         )
-        circles.firstOrNull { hypot(x - it.x, y - it.y) <= it.r * 1.38f }?.let {
+        circles.firstOrNull { hypot(x - it.x, y - it.y) <= it.r * 1.50f }?.let {
             pointerKeys[id] = it.key
             setButton(it.key, true)
             buzz()
@@ -334,16 +331,16 @@ class GamepadView(context: Context) : View(context) {
             return
         }
 
-        val dcx = w * 0.34f
-        val dcy = h * 0.69f
-        val s = m * 0.072f
-        val arm = s * 0.70f
-        val length = s * 1.72f
+        val dcx = w * 0.335f
+        val dcy = h * 0.76f
+        val s = m * 0.070f
+        val arm = s * 0.76f
+        val length = s * 1.88f
         val dpad = listOf(
-            "up" to RectF(dcx - arm, dcy - length, dcx + arm, dcy - arm * 0.25f),
-            "down" to RectF(dcx - arm, dcy + arm * 0.25f, dcx + arm, dcy + length),
-            "left" to RectF(dcx - length, dcy - arm, dcx - arm * 0.25f, dcy + arm),
-            "right" to RectF(dcx + arm * 0.25f, dcy - arm, dcx + length, dcy + arm),
+            "up" to RectF(dcx - arm, dcy - length, dcx + arm, dcy - arm * 0.20f),
+            "down" to RectF(dcx - arm, dcy + arm * 0.20f, dcx + arm, dcy + length),
+            "left" to RectF(dcx - length, dcy - arm, dcx - arm * 0.20f, dcy + arm),
+            "right" to RectF(dcx + arm * 0.20f, dcy - arm, dcx + length, dcy + arm),
         )
         dpad.firstOrNull { it.second.contains(x, y) }?.let {
             pointerKeys[id] = it.first
