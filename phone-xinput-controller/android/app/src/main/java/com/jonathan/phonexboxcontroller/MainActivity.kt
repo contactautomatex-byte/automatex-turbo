@@ -146,10 +146,13 @@ class MainActivity : Activity() {
         // scrollable so the action buttons always remain visible.
         val scroll = ScrollView(this).apply {
             isFillViewport = false
-            addView(content, ScrollView.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT,
-            ))
+            addView(
+                content,
+                ViewGroup.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT,
+                ),
+            )
         }
         val maxBodyHeight = (resources.displayMetrics.heightPixels * 0.58f).toInt()
         scroll.layoutParams = ViewGroup.LayoutParams(
