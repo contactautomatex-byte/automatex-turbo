@@ -17,13 +17,10 @@ import kotlin.math.abs
 import kotlin.math.hypot
 import kotlin.math.min
 import kotlin.math.pow
-import kotlin.math.sign
 
 class GamepadView(context: Context) : View(context) {
     val state = GamepadState()
 
-    // Phone-first tuning. Movement behaves like a floating joystick; aim behaves
-    // like a relative touch pad so touching the screen never kicks the camera.
     var moveSensitivity = 1.0f
     var aimSensitivity = 0.78f
     var moveDeadzone = 0.10f
@@ -91,17 +88,18 @@ class GamepadView(context: Context) : View(context) {
                 return
             }
 
+            // XInput games often apply their own stick deadzone. While the thumb is
+            // moving we deliberately stay above that zone; when the thumb stops we
+            // return to neutral quickly so the camera can never stay drifting.
             val idleMs = SystemClock.uptimeMillis() - lastAimMoveAt
-            if (idleMs >= 42L) {
-                filteredRx *= 0.34f
-                filteredRy *= 0.34f
-                if (abs(filteredRx) < 0.008f) filteredRx = 0f
-                if (abs(filteredRy) < 0.008f) filteredRy = 0f
-                state.rx = filteredRx
-                state.ry = filteredRy
+            if (idleMs >= 48L) {
+                filteredRx = 0f
+                filteredRy = 0f
+                state.rx = 0f
+                state.ry = 0f
                 invalidate()
             }
-            mainHandler.postDelayed(this, 16L)
+            mainHandler.postDelayed(this, 12L)
         }
     }
 
@@ -114,7 +112,6 @@ class GamepadView(context: Context) : View(context) {
         canvas.drawRect(0f, 0f, w, h, background)
         drawControllerShell(canvas, w, h)
 
-        // Positions chosen from the user's natural thumb-rest locations on a phone.
         leftHomeCx = w * 0.280f
         leftHomeCy = h * 0.600f
         rightHomeCx = w * 0.740f
@@ -129,7 +126,6 @@ class GamepadView(context: Context) : View(context) {
         drawStick(canvas, leftBaseCx, leftBaseCy, stickRadius, state.lx, -state.ly)
         drawStick(canvas, rightHomeCx, rightHomeCy, stickRadius, state.rx, -state.ry)
 
-        // Very subtle indication that the lower-right surface accepts relative aim.
         if (rightAimPointer != null) {
             canvas.drawRoundRect(
                 RectF(w * 0.53f, h * 0.31f, w * 0.965f, h * 0.94f),
@@ -325,6 +321,19 @@ class GamepadView(context: Context) : View(context) {
             }
             MotionEvent.ACTION_MOVE -> {
                 reconcilePointers(event)
+
+                // Use historical touch samples too. This matters on high-refresh phones:
+                // without them a slow swipe produces tiny deltas that many XInput games
+                // discard inside their own right-stick deadzone.
+                for (history in 0 until event.historySize) {
+                    for (i in 0 until event.pointerCount) {
+                        updatePointer(
+                            event.getPointerId(i),
+                            event.getHistoricalX(i, history),
+                            event.getHistoricalY(i, history),
+                        )
+                    }
+                }
                 for (i in 0 until event.pointerCount) {
                     updatePointer(event.getPointerId(i), event.getX(i), event.getY(i))
                 }
@@ -344,7 +353,6 @@ class GamepadView(context: Context) : View(context) {
         val h = height.toFloat()
         val m = min(w, h)
 
-        // Discrete buttons always win over the invisible thumb zones.
         shoulderButtons(w, h).firstOrNull { it.rect.contains(x, y) }?.let {
             pointerKeys[id] = it.key
             setButton(it.key, true)
@@ -368,8 +376,6 @@ class GamepadView(context: Context) : View(context) {
             return
         }
 
-        // Left: floating origin. A touch is always neutral; movement only starts
-        // after the finger actually drags away from the touch-down point.
         if (x < w * 0.49f && y > h * 0.29f && leftStickPointer == null) {
             leftStickPointer = id
             pointerKeys[id] = "lstick"
@@ -381,8 +387,6 @@ class GamepadView(context: Context) : View(context) {
             return
         }
 
-        // Right: relative aim surface. Touch-down is neutral, so tapping the screen
-        // can never throw the camera up/down. Only finger movement produces RX/RY.
         if (x > w * 0.51f && y > h * 0.29f && rightAimPointer == null) {
             rightAimPointer = id
             pointerKeys[id] = "raim"
@@ -425,8 +429,6 @@ class GamepadView(context: Context) : View(context) {
         var dy = leftBaseCy - y
         var mag = hypot(dx, dy)
 
-        // If the thumb travels past the virtual gate, let the floating base follow
-        // slightly. This avoids forcing the player to stretch across the glass.
         if (mag > stickRadius * 1.18f) {
             val overshoot = mag - stickRadius
             val ux = dx / mag
@@ -461,34 +463,53 @@ class GamepadView(context: Context) : View(context) {
     }
 
     private fun updateRelativeAim(x: Float, y: Float) {
-        val m = min(width.toFloat(), height.toFloat()).coerceAtLeast(1f)
         val dx = x - rightLastX
-        val dy = y - rightLastY
+        val dyScreen = y - rightLastY
         rightLastX = x
         rightLastY = y
+
+        val pixelDistance = hypot(dx, dyScreen)
+        if (pixelDistance < 1.15f) return
+
         lastAimMoveAt = SystemClock.uptimeMillis()
 
-        // Distance-per-event becomes right-stick velocity. The power curve makes
-        // tiny thumb corrections precise while allowing a fast swipe to turn quickly.
-        val scale = m * 0.058f
-        val rawX = (dx / scale).coerceIn(-1f, 1f)
-        val rawY = (-dy / scale).coerceIn(-1f, 1f)
-        val targetX = aimCurve(rawX)
-        val targetY = aimCurve(rawY)
+        // Convert swipe speed to right-stick deflection. A radial anti-deadzone is
+        // essential here because PC games commonly ignore small XInput stick values.
+        val m = min(width.toFloat(), height.toFloat()).coerceAtLeast(1f)
+        val swipeScale = m * 0.030f
+        val normalized = (pixelDistance / swipeScale).coerceIn(0f, 1f)
+        val gain = aimSensitivity.coerceIn(0.30f, 1.50f)
+        val curved = (normalized.pow(1.22f) * gain).coerceIn(0f, 1f)
+        val antiDeadzone = 0.245f
+        val strength = (antiDeadzone + (1f - antiDeadzone) * curved).coerceIn(antiDeadzone, 1f)
 
-        val alpha = 0.62f
-        filteredRx = filteredRx * (1f - alpha) + targetX * alpha
-        filteredRy = filteredRy * (1f - alpha) + targetY * alpha
+        val ux = dx / pixelDistance
+        val uy = -dyScreen / pixelDistance
+        val targetX = ux * strength
+        val targetY = uy * strength
+
+        // Light filtering removes touch-panel noise without dropping below the
+        // game's deadzone. First movement responds immediately; later samples blend.
+        if (abs(filteredRx) < 0.001f && abs(filteredRy) < 0.001f) {
+            filteredRx = targetX
+            filteredRy = targetY
+        } else {
+            val alpha = 0.78f
+            filteredRx = filteredRx * (1f - alpha) + targetX * alpha
+            filteredRy = filteredRy * (1f - alpha) + targetY * alpha
+        }
+
+        val outMag = hypot(filteredRx, filteredRy)
+        if (outMag > 0.001f && outMag < antiDeadzone) {
+            val boost = antiDeadzone / outMag
+            filteredRx *= boost
+            filteredRy *= boost
+        }
+
         state.rx = filteredRx.coerceIn(-1f, 1f)
         state.ry = filteredRy.coerceIn(-1f, 1f)
         ensureAimDecay()
-    }
-
-    private fun aimCurve(value: Float): Float {
-        val a = abs(value)
-        if (a < 0.018f) return 0f
-        val precision = a.pow(1.34f)
-        return (sign(value) * precision * aimSensitivity.coerceIn(0.30f, 1.50f)).coerceIn(-1f, 1f)
+        invalidate()
     }
 
     private fun ensureAimDecay() {
